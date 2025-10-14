@@ -16,7 +16,7 @@
 
     /* Tema inspirado no Copilot */
     --background: 320 20% 98%;
-    --foreground: 320 20% 20%;
+    --foreground: 320 50% 50%;
     --card: 320 20% 95%;
     --card-foreground: 320 20% 20%;
     --popover: 220 20% 92%;
@@ -73,12 +73,14 @@
   box-shadow: 0 4px 12px hsl(var(--accent) / 0.2);
 }
 
+
 .navbar {
-  background-color: hsl(150 20% 50%);
+  background-color: hsl(0, 0%, 20%); /* cinza escuro */
   color: hsl(var(--foreground));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+
 .navbar a,
 .navbar button,
 .navbar svg {
