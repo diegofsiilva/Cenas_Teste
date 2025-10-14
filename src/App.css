@@ -15,15 +15,15 @@
     --radius: 0.5rem;
 
     /* Tema inspirado no Copilot */
-    --background: 220 20% 98%;
-    --foreground: 220 20% 20%;
-    --card: 220 20% 95%;
-    --card-foreground: 220 20% 20%;
+    --background: 320 20% 98%;
+    --foreground: 320 20% 20%;
+    --card: 320 20% 95%;
+    --card-foreground: 320 20% 20%;
     --popover: 220 20% 92%;
     --popover-foreground: 220 20% 20%;
     --primary: 220 90% 56%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 20% 85%;
+    --secondary: 420 20% 85%;
     --secondary-foreground: 220 20% 20%;
     --muted: 220 20% 90%;
     --muted-foreground: 220 10% 40%;
@@ -54,7 +54,7 @@
 /* Estilos customizados para o PDV */
 .table-card {
   background-color: hsl(var(--card));
-  border: 2px solid hsl(var(--primary) / 0.3);
+  border: 2px solid hsl(var(--primary) / 0.1);
   border-radius: 0.5rem;
   padding: 1rem;
   cursor: pointer;
@@ -74,7 +74,7 @@
 }
 
 .navbar {
-  background-color: hsl(220 20% 90%);
+  background-color: hsl(220 20% 80%);
   color: hsl(var(--foreground));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
