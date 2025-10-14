@@ -16,11 +16,11 @@ export default function Navbar({ currentView, setCurrentView }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-xl">
-              CB
+              CL
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">Cenas Bar e Lounge</h1>
-              <p className="text-xs text-muted-foreground">Sistema de Ponto de Venda</p>
+              <p className="text-xs text-muted-foreground">Registro de vendas CL</p>
             </div>
           </div>
           
