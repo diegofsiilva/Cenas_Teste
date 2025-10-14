@@ -185,7 +185,7 @@ const handleOpenOrder = () => {
 
   // Removido: setShowOrderModal(false);
 };
-      <Button
+     <Button
   onClick={() => {
     const confirmClose = window.confirm(
       currentOrder.items.length === 0
@@ -201,3 +201,4 @@ const handleOpenOrder = () => {
   <DollarSign className="w-5 h-5 mr-2" />
   Fechar Comanda
 </Button>
+
