@@ -31,9 +31,9 @@ export function AppProvider({ children }) {
     },
     {
       id: 2,
-      name: 'Narguilé Premium',
+      name: 'Narguilé ',
       category: 'Narguilé',
-      price: 45.00,
+      price: 15.00,
       description: 'Narguilé completo com essência',
       image: '',
       stock: 10
@@ -44,6 +44,15 @@ export function AppProvider({ children }) {
       category: 'Sinuca',
       price: 15.00,
       description: 'Uma hora de sinuca',
+      image: '',
+      stock: 999
+    },
+    {
+      id: 4,
+      name: 'Dose Whisky',
+      category: 'Bebida',
+      price: 35.00,
+      description: 'Dose',
       image: '',
       stock: 999
     },
