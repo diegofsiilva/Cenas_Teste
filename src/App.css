@@ -98,11 +98,16 @@
 }
 
 .modal-overlay {
-  @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center;
+  @apply fixed inset-0 z-50 flex items-center justify-center;
 }
 
 .modal-content {
-  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto;
+  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto relative;
+}
+
+.modal-content::before {
+  content: '';
+  @apply absolute inset-0 bg-white/50 backdrop-blur-sm rounded-lg -z-10;
 }
 
 .product-card {
