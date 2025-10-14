@@ -36,42 +36,50 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-    /* Tema inspirado no Manus - Tons de Roxo, Azul e Cinza Escuro */
-    --background: 240 10% 3%; /* Quase preto, levemente azulado/roxo */
-    --foreground: 240 5% 95%; /* Branco suave */
-    --card: 240 8% 8%;     /* Cinza escuro para cards */
-    --card-foreground: 240 5% 95%;
-    --popover: 240 8% 10%;
-    --popover-foreground: 240 5% 95%;
-    --primary: 260 80% 60%; /* Roxo vibrante */
-    --primary-foreground: 240 5% 98%; /* Branco para texto no primário */
-    --secondary: 240 15% 20%; /* Azul/roxo escuro secundário */
-    --secondary-foreground: 240 5% 95%;
-    --muted: 240 10% 15%;
-    --muted-foreground: 240 10% 60%;
-    --accent: 260 70% 50%; /* Roxo um pouco mais escuro para destaque */
-    --accent-foreground: 240 5% 98%;
-    --destructive: 0 84% 60%; /* Vermelho para ações destrutivas */
-    --border: 240 10% 25%;
-    --input: 240 10% 18%;
-    --ring: 260 80% 60%;
-    --chart-1: 260 80% 60%;
-    --chart-2: 260 70% 50%;
-    --chart-3: 260 60% 70%;
-    --chart-4: 240 50% 30%;
-    --chart-5: 240 50% 70%;
+
+    /* Tema inspirado no ChatGPT – fundo grafite e tons de verde-acqua */
+    --background: 210 10% 6%;          /* Fundo principal escuro (grafite) */
+    --foreground: 210 10% 92%;         /* Texto principal (branco suave) */
+    --card: 210 10% 10%;               /* Cartões e painéis */
+    --card-foreground: 210 10% 92%;
+    --popover: 210 10% 12%;
+    --popover-foreground: 210 10% 95%;
+
+    --primary: 150 60% 50%;            /* Verde água (ChatGPT vibe) */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 10% 20%;          /* Fundo secundário */
+    --secondary-foreground: 210 10% 90%;
+
+    --muted: 210 10% 15%;
+    --muted-foreground: 210 10% 65%;
+
+    --accent: 150 55% 45%;             /* Verde um pouco mais escuro */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 50%;          /* Vermelho alerta */
+    --border: 210 10% 25%;
+    --input: 210 10% 18%;
+    --ring: 150 60% 45%;
+
+    /* Paleta de gráficos em tons neutros e verdes */
+    --chart-1: 150 60% 45%;
+    --chart-2: 150 50% 55%;
+    --chart-3: 150 40% 35%;
+    --chart-4: 210 10% 25%;
+    --chart-5: 210 10% 60%;
   }
 
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Estilos customizados para o PDV */
+/* Estilos customizados */
 .table-card {
   @apply bg-card border-2 border-primary/30 rounded-lg p-4 cursor-pointer transition-all duration-300;
   @apply hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:scale-105;
@@ -126,7 +134,7 @@
   @apply hover:bg-muted/50 transition-colors cursor-pointer;
 }
 
-/* Animações personalizadas */
+/* Animação sutil de brilho */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 5px hsl(var(--primary)),
@@ -143,22 +151,23 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Scrollbar personalizada */
+/* Scrollbar moderna e discreta */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(215 50% 8%);
+  background: hsl(210 10% 8%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(215 60% 35%);
+  background: hsl(150 40% 35%);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(217 80% 50%);
+  background: hsl(150 60% 45%);
 }
+
 
