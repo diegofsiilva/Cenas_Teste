@@ -40,10 +40,10 @@ function App() {
         <footer className="border-t border-border bg-card/50 backdrop-blur-sm py-6 mt-12">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm text-muted-foreground">
-              © 2025 Cenas Bar e Lounge - Sistema de Ponto de Venda
+              © 2025 Cenas Bar e Lounge - Sistema de Venda
             </p>
             <p className="text-xs text-muted-foreground mt-2">
-              Desenvolvido com React + Vite + Tailwind CSS
+              
             </p>
           </div>
         </footer>
