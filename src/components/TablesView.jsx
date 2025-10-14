@@ -6,7 +6,17 @@ import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
 
 export default function TablesView() {
-  const { tables, orders, createOrder, closeOrder, addItemToOrder, removeItemFromOrder, applyDiscount, products } = useApp();
+  const {
+    tables,
+    orders,
+    createOrder,
+    closeOrder,
+    addItemToOrder,
+    removeItemFromOrder,
+    applyDiscount,
+    products,
+  } = useApp();
+
   const [selectedTable, setSelectedTable] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
@@ -19,24 +29,28 @@ export default function TablesView() {
 
   const handleTableClick = (table) => {
     setSelectedTable(table);
-    if (table.status === 'available') {
-      setShowOrderModal(true);
-    } else {
-      setShowOrderModal(true);
-    }
+    setShowOrderModal(true);
   };
 
   const handleOpenOrder = () => {
     if (selectedTable) {
       createOrder(selectedTable.id, customerName);
       setCustomerName('');
+      // Mantém o modal aberto
+    }
+  };
+
+  const handleCloseOrder = () => {
+    if (selectedTable && selectedTable.orderId) {
+      closeOrder(selectedTable.orderId);
+      setSelectedTable(null);
       setShowOrderModal(false);
     }
   };
 
   const handleAddProduct = () => {
     if (selectedTable && selectedProduct) {
-      const order = orders.find(o => o.id === selectedTable.orderId);
+      const order = orders.find((o) => o.id === selectedTable.orderId);
       if (order) {
         const price = customPrice ? parseFloat(customPrice) : null;
         addItemToOrder(order.id, selectedProduct, quantity, price);
@@ -49,14 +63,6 @@ export default function TablesView() {
     }
   };
 
-  const handleCloseOrder = () => {
-    if (selectedTable && selectedTable.orderId) {
-      closeOrder(selectedTable.orderId);
-      setSelectedTable(null);
-      setShowOrderModal(false);
-    }
-  };
-
   const handleApplyDiscount = () => {
     if (selectedTable && selectedTable.orderId && discountValue) {
       applyDiscount(selectedTable.orderId, parseFloat(discountValue));
@@ -64,24 +70,29 @@ export default function TablesView() {
     }
   };
 
-  const currentOrder = selectedTable?.orderId ? orders.find(o => o.id === selectedTable.orderId) : null;
+  const currentOrder = selectedTable?.orderId
+    ? orders.find((o) => o.id === selectedTable.orderId)
+    : null;
 
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const groupedTables = {
-    left: tables.filter(t => t.position === 'left'),
-    topRight: tables.filter(t => t.position === 'top-right'),
-    bottom: tables.filter(t => t.position === 'bottom'),
+    left: tables.filter((t) => t.position === 'left'),
+    topRight: tables.filter((t) => t.position === 'top-right'),
+    bottom: tables.filter((t) => t.position === 'bottom'),
   };
 
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Controle de Mesas</h2>
-        <p className="text-muted-foreground">Clique em uma mesa para abrir ou gerenciar a comanda</p>
+        <p className="text-muted-foreground">
+          Clique em uma mesa para abrir ou gerenciar a comanda
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -89,7 +100,7 @@ export default function TablesView() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-primary">Mesas Principais</h3>
           <div className="grid grid-cols-2 gap-3">
-            {groupedTables.left.map(table => (
+            {groupedTables.left.map((table) => (
               <div
                 key={table.id}
                 onClick={() => handleTableClick(table)}
@@ -117,7 +128,7 @@ export default function TablesView() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-primary">Área Superior</h3>
           <div className="grid grid-cols-2 gap-3">
-            {groupedTables.topRight.map(table => (
+            {groupedTables.topRight.map((table) => (
               <div
                 key={table.id}
                 onClick={() => handleTableClick(table)}
@@ -145,7 +156,7 @@ export default function TablesView() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-primary">Área de Lazer</h3>
           <div className="space-y-3">
-            {groupedTables.bottom.map(table => (
+            {groupedTables.bottom.map((table) => (
               <div
                 key={table.id}
                 onClick={() => handleTableClick(table)}
@@ -170,35 +181,44 @@ export default function TablesView() {
         </div>
       </div>
 
-     // Função atualizada
-const handleOpenOrder = () => {
-  const newOrder = {
-    customerName,
-    createdAt: new Date(),
-    items: [],
-    discount: 0,
-    total: 0,
-  };
+      {/* Modal de Comanda */}
+      {showOrderModal && selectedTable && (
+        <div className="modal-overlay" onClick={() => setShowOrderModal(false)}>
+          <div className="modal-content p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">{selectedTable.name}</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowOrderModal(false)}>
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
 
-  setCurrentOrder(newOrder);
-  setSelectedTable(prev => ({ ...prev, status: 'occupied' }));
-
-  // Removido: setShowOrderModal(false);
-};
-     <Button
-  onClick={() => {
-    const confirmClose = window.confirm(
-      currentOrder.items.length === 0
-        ? 'A comanda está vazia. Tem certeza que deseja fechar?'
-        : 'Tem certeza que deseja fechar a comanda?'
-    );
-    if (confirmClose) {
-      handleCloseOrder();
-    }
-  }}
-  className="w-full bg-green-600 hover:bg-green-700"
->
-  <DollarSign className="w-5 h-5 mr-2" />
-  Fechar Comanda
-</Button>
-
+            {selectedTable.status === 'available' ? (
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="customerName">Nome do Cliente (opcional)</Label>
+                  <Input
+                    id="customerName"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Digite o nome do cliente"
+                    className="mt-2"
+                  />
+                </div>
+                <Button onClick={handleOpenOrder} className="w-full">
+                  Abrir Comanda
+                </Button>
+              </div>
+            ) : currentOrder ? (
+              <div className="space-y-6">
+                {/* Informações da comanda */}
+                <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+                  {currentOrder.customerName && (
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-primary" />
+                      <span className="font-semibold">{currentOrder.customerName}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4" />
+                    <span>
+                      Aberta em: {new Date(currentOrder.createdAt).toLocaleString('
