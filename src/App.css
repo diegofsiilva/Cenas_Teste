@@ -98,11 +98,11 @@
 }
 
 .modal-overlay {
-  @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center;
+  @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-[999] flex items-center justify-center;
 }
 
 .modal-content {
-  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto;
+  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto z-[1000] relative;
 }
 
 .product-card {
