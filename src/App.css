@@ -12,33 +12,30 @@
 
 @layer base {
   :root {
-    --radius: 0.5rem;
+    
+ --radius: 0.5rem;
 
-    /* Tema inspirado no Copilot */
-    --background: 320 20% 98%;
-    --foreground: 320 50% 50%;
-    --card: 320 20% 95%;
-    --card-foreground: 320 20% 20%;
-    --popover: 220 20% 92%;
-    --popover-foreground: 220 20% 20%;
-    --primary: 220 90% 56%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 420 20% 85%;
-    --secondary-foreground: 220 20% 20%;
-    --muted: 220 20% 90%;
-    --muted-foreground: 220 10% 40%;
-    --accent: 220 80% 70%;
-    --accent-foreground: 220 20% 20%;
-    --destructive: 0 84% 60%;
-    --border: 220 20% 80%;
-    --input: 220 20% 85%;
-    --ring: 220 90% 56%;
-    --chart-1: 220 90% 56%;
-    --chart-2: 220 80% 50%;
-    --chart-3: 220 70% 65%;
-    --chart-4: 220 60% 35%;
-    --chart-5: 220 60% 75%;
-  }
+  /* Tema escuro inspirado no Copilot */
+  --background: 220 10% 10%;           /* fundo geral: cinza quase preto */
+  --foreground: 0 0% 90%;              /* texto principal: branco suave */
+  --card: 220 10% 15%;                 /* fundo de cards */
+  --card-foreground: 0 0% 90%;         /* texto em cards */
+  --popover: 220 10% 12%;              /* fundo de popovers */
+  --popover-foreground: 0 0% 90%;      /* texto em popovers */
+  --primary: 220 90% 56%;              /* azul Copilot */
+  --primary-foreground: 0 0% 100%;     /* texto sobre azul */
+  --secondary: 220 10% 25%;            /* cinza médio */
+  --secondary-foreground: 0 0% 90%;    /* texto sobre secundário */
+  --muted: 220 10% 30%;                /* cinza apagado */
+  --muted-foreground: 0 0% 60%;        /* texto apagado */
+  --accent: 220 80% 70%;               /* azul claro para destaque */
+  --accent-foreground: 0 0% 100%;      /* texto sobre destaque */
+  --destructive: 0 84% 60%;            /* vermelho para ações perigosas */
+  --border: 220 10% 30%;               /* bordas discretas */
+  --input: 220 10% 20%;                /* fundo de inputs */
+  --ring: 220 90% 56%;                 /* cor de foco */
+}
+
 
   * {
     border-color: hsl(var(--border));
@@ -79,6 +76,7 @@
   color: hsl(var(--foreground));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  foreground: 0 0% 90%; /* cinza claro */
 }
 
 .navbar a,
