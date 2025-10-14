@@ -185,3 +185,19 @@ const handleOpenOrder = () => {
 
   // Removido: setShowOrderModal(false);
 };
+      <Button
+  onClick={() => {
+    const confirmClose = window.confirm(
+      currentOrder.items.length === 0
+        ? 'A comanda está vazia. Tem certeza que deseja fechar?'
+        : 'Tem certeza que deseja fechar a comanda?'
+    );
+    if (confirmClose) {
+      handleCloseOrder();
+    }
+  }}
+  className="w-full bg-green-600 hover:bg-green-700"
+>
+  <DollarSign className="w-5 h-5 mr-2" />
+  Fechar Comanda
+</Button>
