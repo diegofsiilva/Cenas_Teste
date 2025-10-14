@@ -67,8 +67,9 @@
     @apply border-border outline-ring/50;
   }
 
-  body {
-    @apply bg-background text-foreground;
+ body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   }
 }
 
@@ -103,8 +104,14 @@
 }
 
 .modal-content {
-  @apply border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto;
-  background-color: hsl(var(--card) / 1); /* Corrige transparência */
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 64rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
 }
 
 .product-card {
