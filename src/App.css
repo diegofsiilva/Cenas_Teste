@@ -36,50 +36,42 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-
-    /* Tema inspirado no ChatGPT – fundo grafite e tons de verde-acqua */
-    --background: 210 10% 6%;          /* Fundo principal escuro (grafite) */
-    --foreground: 210 10% 92%;         /* Texto principal (branco suave) */
-    --card: 210 10% 10%;               /* Cartões e painéis */
-    --card-foreground: 210 10% 92%;
-    --popover: 210 10% 12%;
-    --popover-foreground: 210 10% 95%;
-
-    --primary: 150 60% 50%;            /* Verde água (ChatGPT vibe) */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 10% 20%;          /* Fundo secundário */
-    --secondary-foreground: 210 10% 90%;
-
-    --muted: 210 10% 15%;
-    --muted-foreground: 210 10% 65%;
-
-    --accent: 150 55% 45%;             /* Verde um pouco mais escuro */
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 70% 50%;          /* Vermelho alerta */
-    --border: 210 10% 25%;
-    --input: 210 10% 18%;
-    --ring: 150 60% 45%;
-
-    /* Paleta de gráficos em tons neutros e verdes */
-    --chart-1: 150 60% 45%;
-    --chart-2: 150 50% 55%;
-    --chart-3: 150 40% 35%;
-    --chart-4: 210 10% 25%;
-    --chart-5: 210 10% 60%;
+    /* Tema Cenas Bar e Lounge - Azul e Preto */
+    --background: 210 100% 6%;
+    --foreground: 0 0% 98%;
+    --card: 215 50% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 215 50% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 215 50% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 215 40% 12%;
+    --muted-foreground: 217 20% 60%;
+    --accent: 217 80% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --border: 215 40% 18%;
+    --input: 215 40% 15%;
+    --ring: 217 91% 60%;
+    --chart-1: 217 91% 60%;
+    --chart-2: 217 80% 50%;
+    --chart-3: 217 70% 65%;
+    --chart-4: 215 60% 35%;
+    --chart-5: 217 60% 75%;
   }
 
   * {
     @apply border-border outline-ring/50;
   }
-
+  
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Estilos customizados */
+/* Estilos customizados para o PDV */
 .table-card {
   @apply bg-card border-2 border-primary/30 rounded-lg p-4 cursor-pointer transition-all duration-300;
   @apply hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:scale-105;
@@ -106,11 +98,11 @@
 }
 
 .modal-overlay {
-  @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-[999] flex items-center justify-center;
+  @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center;
 }
 
 .modal-content {
-  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto z-[1000] relative;
+  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto;
 }
 
 .product-card {
@@ -134,7 +126,7 @@
   @apply hover:bg-muted/50 transition-colors cursor-pointer;
 }
 
-/* Animação sutil de brilho */
+/* Animações personalizadas */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 5px hsl(var(--primary)),
@@ -151,23 +143,22 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Scrollbar moderna e discreta */
+/* Scrollbar personalizada */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(210 10% 8%);
+  background: hsl(415 50% 8%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(150 40% 35%);
+  background: hsl(415 60% 35%);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(150 60% 45%);
+  background: hsl(317 80% 50%);
 }
-
 
