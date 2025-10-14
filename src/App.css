@@ -6,7 +6,7 @@
 @theme {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --radius-lg: var(var(--radius));
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -36,30 +36,30 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-    /* Tema Cenas Bar e Lounge - Azul e Preto */
-    --background: 210 100% 6%;
-    --foreground: 0 0% 98%;
-    --card: 215 50% 10%;
-    --card-foreground: 0 0% 98%;
-    --popover: 215 50% 8%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 215 50% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 215 40% 12%;
-    --muted-foreground: 217 20% 60%;
-    --accent: 217 80% 50%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 84% 60%;
-    --border: 215 40% 18%;
-    --input: 215 40% 15%;
-    --ring: 217 91% 60%;
-    --chart-1: 217 91% 60%;
-    --chart-2: 217 80% 50%;
-    --chart-3: 217 70% 65%;
-    --chart-4: 215 60% 35%;
-    --chart-5: 217 60% 75%;
+    /* Tema inspirado no Manus - Tons de Roxo, Azul e Cinza Escuro */
+    --background: 240 10% 3%; /* Quase preto, levemente azulado/roxo */
+    --foreground: 240 5% 95%; /* Branco suave */
+    --card: 240 8% 8%;     /* Cinza escuro para cards */
+    --card-foreground: 240 5% 95%;
+    --popover: 240 8% 10%;
+    --popover-foreground: 240 5% 95%;
+    --primary: 260 80% 60%; /* Roxo vibrante */
+    --primary-foreground: 240 5% 98%; /* Branco para texto no primário */
+    --secondary: 240 15% 20%; /* Azul/roxo escuro secundário */
+    --secondary-foreground: 240 5% 95%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 10% 60%;
+    --accent: 260 70% 50%; /* Roxo um pouco mais escuro para destaque */
+    --accent-foreground: 240 5% 98%;
+    --destructive: 0 84% 60%; /* Vermelho para ações destrutivas */
+    --border: 240 10% 25%;
+    --input: 240 10% 18%;
+    --ring: 260 80% 60%;
+    --chart-1: 260 80% 60%;
+    --chart-2: 260 70% 50%;
+    --chart-3: 260 60% 70%;
+    --chart-4: 240 50% 30%;
+    --chart-5: 240 50% 70%;
   }
 
   * {
@@ -98,16 +98,11 @@
 }
 
 .modal-overlay {
-  @apply fixed inset-0 z-50 flex items-center justify-center;
+  @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center;
 }
 
 .modal-content {
-  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto relative;
-}
-
-.modal-content::before {
-  content: '';
-  @apply absolute inset-0 bg-white/50 backdrop-blur-sm rounded-lg -z-10;
+  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto;
 }
 
 .product-card {
@@ -166,4 +161,3 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(217 80% 50%);
 }
-
