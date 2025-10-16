@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Palette, Image as ImageIcon, Save, RotateCcw } from 'lucide-react';
+import { Palette, Image, Save, RotateCcw, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label.jsx';
 export default function SettingsView() {
   const { visualSettings, setVisualSettings } = useApp();
   const [tempSettings, setTempSettings] = useState(visualSettings);
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleSave = () => {
     setVisualSettings(tempSettings);
