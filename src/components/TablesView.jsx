@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
 
+
 export default function TablesView() {
   const { tables, orders, createOrder, closeOrder, addItemToOrder, removeItemFromOrder, applyDiscount, products } = useApp();
   const [selectedTable, setSelectedTable] = useState(null);
