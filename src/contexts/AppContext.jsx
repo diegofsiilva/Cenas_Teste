@@ -183,7 +183,7 @@ export function AppProvider({ children }) {
     ));
   };
 
-  const closeOrder = (orderId) => {
+  const closeOrder = (orderId, paymentMethod = 'dinheiro') => {
     const order = orders.find(o => o.id === orderId);
     if (order) {
       // Adicionar ao histórico
@@ -191,7 +191,8 @@ export function AppProvider({ children }) {
         ...order,
         status: 'closed',
         closedAt: new Date().toISOString(),
-        finalTotal: order.total - order.discount
+        finalTotal: order.total - order.discount,
+        paymentMethod
       };
       setSalesHistory([...salesHistory, closedOrder]);
       
