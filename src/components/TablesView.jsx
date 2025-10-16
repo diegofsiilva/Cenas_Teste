@@ -874,125 +874,44 @@ export default function TablesView() {
 
               {/* Seleção de forma de pagamento */}
 
-              <div>
-
-                <Label className="text-base font-semibold mb-3 block">Forma de Pagamento</Label>
-
-                <div className="grid grid-cols-3 gap-3">
-
-                  <button
-
-                    onClick={() => setPaymentMethod('dinheiro')}
-
-                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
-
-                      paymentMethod === 'dinheiro'
-
-                        ? 'border-primary bg-primary/10'
-
-                        : 'border-border hover:border-primary/50'
-
-                    }`}
-
-                  >
-
-                    <Banknote className="w-6 h-6" />
-
-                    <span className="text-sm font-semibold">Dinheiro</span>
-
-                  </button>
-
-                  <button
-
-                    onClick={() => setPaymentMethod('cartao')}
-
-                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
-
-                      paymentMethod === 'cartao'
-
-                        ? 'border-primary bg-primary/10'
-
-                        : 'border-border hover:border-primary/50'
-
-                    }`}
-
-                  >
-
-                    <CreditCard className="w-6 h-6" />
-
-                    <span className="text-sm font-semibold">Cartão</span>
-
-                  </button>
-
-                  <button
-
-                    onClick={() => setPaymentMethod('pix')}
-
-                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
-
-                      paymentMethod === 'pix'
-
-                        ? 'border-primary bg-primary/10'
-
-                        : 'border-border hover:border-primary/50'
-
-                    }`}
-
-                  >
-
-                    <Smartphone className="w-6 h-6" />
-
-                    <span className="text-sm font-semibold">Pix</span>
-
-                  </button>
-
-                </div>
-
-              </div>
-
-
-
-              {/* Botões de ação */}
-
-              <div className="flex gap-3">
-
-                <Button
-
-                  variant="outline"
-
-                  onClick={() => setShowConfirmModal(false)}
-
-                  className="flex-1"
-
-                >
-
-                  Cancelar
-
-                </Button>
-
-                <Button
-
-                  onClick={confirmCloseOrder}
-
-                  className="flex-1 bg-green-600 hover:bg-green-700"
-
-                >
-
-                  Confirmar Fechamento
-
-                </Button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
-    </div>
+             <div className="grid grid-cols-3 gap-3">
+                  <Button
+                    variant="outline" // Use uma variante para estilo
+                    onClick={() => setPaymentMethod('dinheiro')} // Ação correta com o componente <Button>
+                    className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
+                      paymentMethod === 'dinheiro'
+                        ? 'border-primary ring-2 ring-primary bg-primary/10' // Estilo de seleção
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <Banknote className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Dinheiro</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setPaymentMethod('cartao')} // Ação correta
+                    className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
+                      paymentMethod === 'cartao'
+                        ? 'border-primary ring-2 ring-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <CreditCard className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Cartão</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setPaymentMethod('pix')} // Ação correta
+                    className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
+                      paymentMethod === 'pix'
+                        ? 'border-primary ring-2 ring-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <Smartphone className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Pix</span>
+                  </Button>
+                </div>
 
   );
 
