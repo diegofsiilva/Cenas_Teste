@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    -background: 220 10% 10%;           /* fundo geral: cinza quase preto */
+  --background: 220 10% 10%;           /* fundo geral: cinza quase preto */
   --foreground: 0 0% 90%;              /* texto principal: branco suave */
   --card: 220 10% 15%;                 /* fundo de cards */
   --card-foreground: 0 0% 90%;         /* texto em cards */
