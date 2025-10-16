@@ -6,30 +6,24 @@
 
 @layer base {
   :root {
-    --radius: 0.5rem;
-    --background: 240 10% 3%;
-    --foreground: 240 5% 95%;
-    --card: 240 8% 8%;
-    --card-foreground: 240 5% 95%;
-    --popover: 240 8% 10%;
-    --popover-foreground: 240 5% 95%;
-    --primary: 260 80% 60%;
-    --primary-foreground: 240 5% 98%;
-    --secondary: 240 15% 20%;
-    --secondary-foreground: 240 5% 95%;
-    --muted: 240 10% 15%;
-    --muted-foreground: 240 10% 60%;
-    --accent: 260 70% 50%;
-    --accent-foreground: 240 5% 98%;
-    --destructive: 0 84% 60%;
-    --border: 240 10% 25%;
-    --input: 240 10% 18%;
-    --ring: 260 80% 60%;
-    --chart-1: 260 80% 60%;
-    --chart-2: 260 70% 50%;
-    --chart-3: 260 60% 70%;
-    --chart-4: 240 50% 30%;
-    --chart-5: 240 50% 70%;
+    -background: 220 10% 10%;           /* fundo geral: cinza quase preto */
+  --foreground: 0 0% 90%;              /* texto principal: branco suave */
+  --card: 220 10% 15%;                 /* fundo de cards */
+  --card-foreground: 0 0% 90%;         /* texto em cards */
+  --popover: 220 10% 12%;              /* fundo de popovers */
+  --popover-foreground: 0 0% 90%;      /* texto em popovers */
+  --primary: 220 90% 56%;              /* azul Copilot */
+  --primary-foreground: 0 0% 100%;     /* texto sobre azul */
+  --secondary: 220 10% 25%;            /* cinza médio */
+  --secondary-foreground: 0 0% 90%;    /* texto sobre secundário */
+  --muted: 220 10% 30%;                /* cinza apagado */
+  --muted-foreground: 0 0% 60%;        /* texto apagado */
+  --accent: 220 80% 70%;               /* azul claro para destaque */
+  --accent-foreground: 0 0% 100%;      /* texto sobre destaque */
+  --destructive: 0 84% 60%;            /* vermelho para ações perigosas */
+  --border: 220 10% 30%;               /* bordas discretas */
+  --input: 220 10% 20%;                /* fundo de inputs */
+  --ring: 220 90% 56%;                 /* cor de foco */
   }
 
   * {
