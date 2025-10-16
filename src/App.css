@@ -1,45 +1,84 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
 @layer base {
   :root {
-    --background: 20 10% 10%;
-    --foreground: 50 0% 90%;
-    --card: 220 10% 15%;
-    --card-foreground: 0 0% 90%;
-    --popover: 220 10% 12%;
-    --popover-foreground: 0 0% 90%;
-    --primary: 220 90% 56%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 10% 25%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 220 10% 30%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 220 80% 70%;
-    --accent-foreground: 0 0% 100%;
+    --radius: 0.5rem;
+    /* Tema Cenas Bar e Lounge - Azul e Preto */
+    --background: 210 100% 6%;
+    --foreground: 0 0% 98%;
+    --card: 215 50% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 215 50% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 215 50% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 215 40% 12%;
+    --muted-foreground: 217 20% 60%;
+    --accent: 217 80% 50%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84% 60%;
-    --border: 220 10% 30%;
-    --input: 220 10% 20%;
-    --ring: 220 90% 56%;
+    --border: 215 40% 18%;
+    --input: 215 40% 15%;
+    --ring: 217 91% 60%;
+    --chart-1: 217 91% 60%;
+    --chart-2: 217 80% 50%;
+    --chart-3: 217 70% 65%;
+    --chart-4: 215 60% 35%;
+    --chart-5: 217 60% 75%;
   }
 
   * {
     @apply border-border outline-ring/50;
   }
-
+  
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* PDV custom styles */
+/* Estilos customizados para o PDV */
 .table-card {
   @apply bg-card border-2 border-primary/30 rounded-lg p-4 cursor-pointer transition-all duration-300;
   @apply hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:scale-105;
 }
 
 .table-card.occupied {
-  @apply border-accent bg-accent/40 text-accent-foreground;
+  @apply border-accent bg-accent/10;
 }
 
 .table-card.occupied:hover {
@@ -59,11 +98,11 @@
 }
 
 .modal-overlay {
-  @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-[999] flex items-center justify-center;
+  @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center;
 }
 
 .modal-content {
-  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto z-[1000] relative;
+  @apply bg-card border border-border rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto;
 }
 
 .product-card {
@@ -87,7 +126,7 @@
   @apply hover:bg-muted/50 transition-colors cursor-pointer;
 }
 
-/* Animação de brilho */
+/* Animações personalizadas */
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 5px hsl(var(--primary)),
@@ -104,7 +143,7 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Scrollbar */
+/* Scrollbar personalizada */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -122,3 +161,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(217 80% 50%);
 }
+
