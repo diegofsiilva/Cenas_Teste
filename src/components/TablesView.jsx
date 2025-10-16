@@ -51,7 +51,7 @@ export default function TablesView() {
     }
   };
 
-   const handleCloseOrder = () => {
+  const handleCloseOrder = () => {
     setShowConfirmModal(true);
   };
 
@@ -294,7 +294,7 @@ export default function TablesView() {
                 </div>
 
                 {/* Botão de fechar */}
-                              <Button
+                <Button
                   onClick={handleCloseOrder}
                   className="w-full bg-green-600 hover:bg-green-700"
                 >
@@ -400,7 +400,6 @@ export default function TablesView() {
           </div>
         </div>
       )}
-       )}
 
       {/* Modal de Confirmação de Fechamento */}
       {showConfirmModal && currentOrder && (
@@ -497,8 +496,6 @@ export default function TablesView() {
         </div>
       )}
     </div>
-  );
-}
   );
 }
 
