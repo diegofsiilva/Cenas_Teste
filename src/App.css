@@ -218,8 +218,8 @@
     --radius: 0.5rem;
 
     /* Tema inspirado no Copilot */
-    --background: 220 20% 50%;
-    --foreground: 220 20% 70%;
+    --background: 220 20% 10%;
+    --foreground: 220 20% 90%;
     --card: 220 50% 95%;
     --card-foreground: 220 20% 20%;
     --popover: 220 20% 92%;
