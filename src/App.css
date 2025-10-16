@@ -15,11 +15,11 @@
     --radius: 0.5rem;
 
     /* Tema inspirado no Copilot */
-    --background: 220 20% 50%;
-    --foreground: 220 20% 70%;
-    --card: 220 50% 95%;
-    --card-foreground: 220 20% 20%;
-    --popover: 220 20% 92%;
+   --background: 220 40% 20%;              /* fundo geral mais escuro */
+--foreground: 0 0% 100%;                /* letras brancas */
+--card: 220 40% 25%;                    /* caixas mais escuras */
+--card-foreground: 0 0% 100%;          /* texto branco nas caixas */
+--popover: 220 35% 22%;                /* fundo de popover escuro */
     --popover-foreground: 220 20% 20%;
     --primary: 220 90% 56%;
     --primary-foreground: 0 0% 100%;
