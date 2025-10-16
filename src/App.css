@@ -213,36 +213,8 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-@layer base {
-  :root {
-    --radius: 0.5rem;
 
-    /* Tema inspirado no Copilot */
-  --background: 220 40% 20%;              /* fundo geral mais escuro */
---foreground: 0 0% 100%;                /* letras brancas */
---card: 220 40% 25%;                    /* caixas mais escuras */
---card-foreground: 0 0% 100%;          /* texto branco nas caixas */
---popover: 220 35% 22%;                /* fundo de popover escuro */
---popover-foreground: 0 0% 100%;       /* texto branco no popover */
---primary: 220 90% 56%;                /* azul vibrante para botões */
---primary-foreground: 0 0% 100%;       /* texto branco nos botões */
---secondary: 220 30% 30%;              /* azul escuro secundário */
---secondary-foreground: 0 0% 100%;     /* texto branco secundário */
---muted: 220 20% 25%;                  /* fundo apagado escuro */
---muted-foreground: 0 0% 80%;          /* texto cinza claro */
---accent: 220 80% 50%;                 /* azul de destaque */
---accent-foreground: 0 0% 100%;        /* texto branco no destaque */
---destructive: 0 84% 60%;              /* vermelho para ações perigosas */
---border: 220 20% 40%;                 /* bordas discretas */
---input: 220 20% 30%;                  /* campos de entrada escuros */
---ring: 220 90% 56%;                   /* azul vibrante para foco */
---chart-1: 220 90% 56%;
---chart-2: 220 80% 50%;
---chart-3: 220 70% 65%;
---chart-4: 220 60% 35%;
---chart-5: 220 60% 75%;
-
-  }
+  
 
   * {
     border-color: hsl(var(--border));
