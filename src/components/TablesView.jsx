@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Users, Clock, DollarSign, X, Plus, Minus, Trash2 } from 'lucide-react';
+import { Users, Clock, DollarSign, X, Plus, Minus, Trash2, CreditCard, Smartphone, Banknote } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
@@ -16,6 +16,8 @@ export default function TablesView() {
   const [quantity, setQuantity] = useState(1);
   const [discountValue, setDiscountValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('dinheiro');
 
   const handleTableClick = (table) => {
     setSelectedTable(table);
@@ -49,11 +51,17 @@ export default function TablesView() {
     }
   };
 
-  const handleCloseOrder = () => {
+   const handleCloseOrder = () => {
+    setShowConfirmModal(true);
+  };
+
+  const confirmCloseOrder = () => {
     if (selectedTable && selectedTable.orderId) {
-      closeOrder(selectedTable.orderId);
+      closeOrder(selectedTable.orderId, paymentMethod);
       setSelectedTable(null);
       setShowOrderModal(false);
+      setShowConfirmModal(false);
+      setPaymentMethod('dinheiro');
     }
   };
 
@@ -286,10 +294,9 @@ export default function TablesView() {
                 </div>
 
                 {/* Botão de fechar */}
-                <Button
+                              <Button
                   onClick={handleCloseOrder}
                   className="w-full bg-green-600 hover:bg-green-700"
-                  disabled={currentOrder.items.length === 0}
                 >
                   <DollarSign className="w-5 h-5 mr-2" />
                   Fechar Comanda
@@ -393,7 +400,105 @@ export default function TablesView() {
           </div>
         </div>
       )}
+       )}
+
+      {/* Modal de Confirmação de Fechamento */}
+      {showConfirmModal && currentOrder && (
+        <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div className="modal-content p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">Confirmar Fechamento</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowConfirmModal(false)}>
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Resumo da comanda */}
+              <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">Mesa:</span>
+                  <span>{selectedTable?.name}</span>
+                </div>
+                {currentOrder.customerName && (
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold">Cliente:</span>
+                    <span>{currentOrder.customerName}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">Itens:</span>
+                  <span>{currentOrder.items.length}</span>
+                </div>
+                <div className="flex items-center justify-between text-lg font-bold text-primary pt-2 border-t border-border">
+                  <span>Total:</span>
+                  <span>R$ {(currentOrder.total - currentOrder.discount).toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Seleção de forma de pagamento */}
+              <div>
+                <Label className="text-base font-semibold mb-3 block">Forma de Pagamento</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    onClick={() => setPaymentMethod('dinheiro')}
+                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      paymentMethod === 'dinheiro'
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <Banknote className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Dinheiro</span>
+                  </button>
+                  <button
+                    onClick={() => setPaymentMethod('cartao')}
+                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      paymentMethod === 'cartao'
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <CreditCard className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Cartão</span>
+                  </button>
+                  <button
+                    onClick={() => setPaymentMethod('pix')}
+                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      paymentMethod === 'pix'
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <Smartphone className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Pix</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Botões de ação */}
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={confirmCloseOrder}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  Confirmar Fechamento
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
   );
 }
 
