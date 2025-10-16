@@ -37,10 +37,10 @@
   :root {
     --radius: 0.5rem;
     /* Tema Cenas Bar e Lounge - Azul e Preto */
-    --background: 210 100% 6%;
-    --foreground: 0 0% 98%;
+    --background: 10 100% 6%;
+    --foreground: 100 0% 98%;
     --card: 215 50% 10%;
-    --card-foreground: 0 0% 98%;
+    --card-foreground: 10 0% 98%;
     --popover: 215 50% 8%;
     --popover-foreground: 0 0% 98%;
     --primary: 217 91% 60%;
