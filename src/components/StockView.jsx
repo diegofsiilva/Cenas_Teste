@@ -211,12 +211,12 @@ export default function StockView() {
                   <Label htmlFor="quantity">Quantidade</Label>
                   <Input
                     id="quantity"
-                    type="number"
-                    min="1"
-                    value={adjustmentQuantity}
-                    onChange={(e) => setAdjustmentQuantity(e.target.value)}
-                    placeholder="Digite a quantidade"
-                    className="mt-2"
+  type="number"
+  min="1"
+  value={adjustmentQuantity}
+  onChange={(e) => setAdjustmentQuantity(e.target.value)}
+  placeholder="Digite a quantidade"
+  className="mt-2 w-20 h-10 px-3 text-base rounded-md border border-gray-600 bg-gray-900 text-white"
                   />
                 </div>
 
