@@ -1,57 +1,27 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Dark mode variante personalizada (se estiver usando plugin) */
 @custom-variant dark (&:is(.dark *));
-
-@theme {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-}
 
 @layer base {
   :root {
     --radius: 0.5rem;
-    /* Tema inspirado no Manus - Tons de Roxo, Azul e Cinza Escuro */
-    --background: 240 10% 3%; /* Quase preto, levemente azulado/roxo */
-    --foreground: 240 5% 95%; /* Branco suave */
-    --card: 240 8% 8%;     /* Cinza escuro para cards */
+    --background: 240 10% 3%;
+    --foreground: 240 5% 95%;
+    --card: 240 8% 8%;
     --card-foreground: 240 5% 95%;
     --popover: 240 8% 10%;
     --popover-foreground: 240 5% 95%;
-    --primary: 260 80% 60%; /* Roxo vibrante */
-    --primary-foreground: 240 5% 98%; /* Branco para texto no primário */
-    --secondary: 240 15% 20%; /* Azul/roxo escuro secundário */
+    --primary: 260 80% 60%;
+    --primary-foreground: 240 5% 98%;
+    --secondary: 240 15% 20%;
     --secondary-foreground: 240 5% 95%;
     --muted: 240 10% 15%;
     --muted-foreground: 240 10% 60%;
-    --accent: 260 70% 50%; /* Roxo um pouco mais escuro para destaque */
+    --accent: 260 70% 50%;
     --accent-foreground: 240 5% 98%;
-    --destructive: 0 84% 60%; /* Vermelho para ações destrutivas */
+    --destructive: 0 84% 60%;
     --border: 240 10% 25%;
     --input: 240 10% 18%;
     --ring: 260 80% 60%;
@@ -65,7 +35,7 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   body {
     @apply bg-background text-foreground;
   }
@@ -78,11 +48,19 @@
 }
 
 .table-card.occupied {
-  @apply border-accent bg-accent/10;
+  @apply border-accent bg-accent/40 text-accent-foreground;
 }
 
 .table-card.occupied:hover {
   @apply border-accent shadow-accent/20;
+}
+
+.dark .table-card {
+  @apply bg-card text-foreground;
+}
+
+.dark .table-card.occupied {
+  @apply bg-accent/30 text-accent-foreground;
 }
 
 .navbar {
@@ -161,4 +139,3 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(217 80% 50%);
 }
-
