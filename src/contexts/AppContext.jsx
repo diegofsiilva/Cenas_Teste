@@ -1,3 +1,4 @@
+// ...existing code...
 import { createContext, useContext, useState } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -65,7 +66,7 @@ export function AppProvider({ children }) {
 
   // Funções auxiliares para mesas
   const updateTableStatus = (tableId, status, orderId = null) => {
-    setTables(tables.map(table => 
+    setTables(prev => prev.map(table =>
       table.id === tableId ? { ...table, status, orderId } : table
     ));
   };
@@ -76,24 +77,24 @@ export function AppProvider({ children }) {
       ...product,
       id: Date.now(),
     };
-    setProducts([...products, newProduct]);
+    setProducts(prev => [...prev, newProduct]);
     return newProduct;
   };
 
   const updateProduct = (productId, updatedData) => {
-    setProducts(products.map(product =>
+    setProducts(prev => prev.map(product =>
       product.id === productId ? { ...product, ...updatedData } : product
     ));
   };
 
   const deleteProduct = (productId) => {
-    setProducts(products.filter(product => product.id !== productId));
+    setProducts(prev => prev.filter(product => product.id !== productId));
   };
 
   const updateStock = (productId, quantity) => {
-    setProducts(products.map(product =>
-      product.id === productId 
-        ? { ...product, stock: product.stock + quantity }
+    setProducts(prev => prev.map(product =>
+      product.id === productId
+        ? { ...product, stock: (product.stock || 0) + quantity }
         : product
     ));
   };
@@ -110,87 +111,117 @@ export function AppProvider({ children }) {
       status: 'open',
       createdAt: new Date().toISOString(),
     };
-    setOrders([...orders, newOrder]);
+    setOrders(prev => [...prev, newOrder]);
     updateTableStatus(tableId, 'occupied', newOrder.id);
     return newOrder;
   };
 
   const addItemToOrder = (orderId, product, quantity = 1, customPrice = null) => {
-    setOrders(orders.map(order => {
-      if (order.id === orderId) {
-        const price = customPrice !== null ? customPrice : product.price;
-        const existingItemIndex = order.items.findIndex(item => item.productId === product.id && item.price === price);
-        
-        let newItems;
-        if (existingItemIndex >= 0) {
-          newItems = order.items.map((item, index) =>
-            index === existingItemIndex
-              ? { ...item, quantity: item.quantity + quantity }
-              : item
-          );
-        } else {
-          newItems = [...order.items, {
+    let orderFound = false;
+
+    setOrders(prevOrders => {
+      const idx = prevOrders.findIndex(o => o.id === orderId);
+      if (idx === -1) return prevOrders; // pedido não encontrado
+
+      orderFound = true;
+      const order = prevOrders[idx];
+      const price = customPrice !== null ? customPrice : product.price;
+
+      const existingItemIndex = order.items.findIndex(
+        item => item.productId === product.id && item.price === price
+      );
+
+      let newItems;
+      if (existingItemIndex >= 0) {
+        newItems = order.items.map((item, i) => {
+          if (i === existingItemIndex) {
+            const newQuantity = (item.quantity || 0) + quantity;
+            const newSubtotal = price * newQuantity;
+            return { ...item, quantity: newQuantity, subtotal: newSubtotal };
+          }
+          return item;
+        });
+      } else {
+        newItems = [
+          ...order.items,
+          {
             productId: product.id,
             name: product.name,
             price,
             quantity,
             subtotal: price * quantity
-          }];
-        }
-
-        const total = newItems.reduce((sum, item) => sum + item.subtotal, 0);
-        
-        return { ...order, items: newItems, total };
+          }
+        ];
       }
-      return order;
-    }));
 
-    // Atualizar estoque
-    updateStock(product.id, -quantity);
+      const total = newItems.reduce((sum, it) => sum + (it.subtotal || 0), 0);
+
+      const newOrder = { ...order, items: newItems, total };
+      const newOrders = [...prevOrders];
+      newOrders[idx] = newOrder;
+      return newOrders;
+    });
+
+    // Atualizar estoque somente se o pedido foi encontrado
+    if (orderFound) {
+      updateStock(product.id, -quantity);
+    }
   };
 
   const removeItemFromOrder = (orderId, itemIndex) => {
-    setOrders(orders.map(order => {
-      if (order.id === orderId) {
-        const removedItem = order.items[itemIndex];
-        const newItems = order.items.filter((_, index) => index !== itemIndex);
-        const total = newItems.reduce((sum, item) => sum + item.subtotal, 0);
-        
-        // Devolver ao estoque
-        const product = products.find(p => p.id === removedItem.productId);
-        if (product) {
-          updateStock(product.id, removedItem.quantity);
-        }
-        
-        return { ...order, items: newItems, total };
-      }
-      return order;
-    }));
+    let removedQuantity = 0;
+    let removedProductId = null;
+
+    setOrders(prevOrders => {
+      const idx = prevOrders.findIndex(o => o.id === orderId);
+      if (idx === -1) return prevOrders; // pedido não encontrado
+
+      const order = prevOrders[idx];
+      if (itemIndex < 0 || itemIndex >= order.items.length) return prevOrders;
+
+      const removedItem = order.items[itemIndex];
+      removedQuantity = removedItem.quantity || 0;
+      removedProductId = removedItem.productId;
+
+      const newItems = order.items.filter((_, i) => i !== itemIndex);
+      const total = newItems.reduce((sum, it) => sum + (it.subtotal || 0), 0);
+
+      const newOrder = { ...order, items: newItems, total };
+      const newOrders = [...prevOrders];
+      newOrders[idx] = newOrder;
+      return newOrders;
+    });
+
+    // Devolver ao estoque somente se houve remoção válida
+    if (removedProductId !== null && removedQuantity > 0) {
+      updateStock(removedProductId, removedQuantity);
+    }
   };
 
   const applyDiscount = (orderId, discount) => {
-    setOrders(orders.map(order =>
+    setOrders(prev => prev.map(order =>
       order.id === orderId ? { ...order, discount } : order
     ));
   };
 
   const closeOrder = (orderId) => {
-    const order = orders.find(o => o.id === orderId);
-    if (order) {
-      // Adicionar ao histórico
-      const closedOrder = {
+    // Encontrar pedido atual
+    let closed = null;
+    setOrders(prev => {
+      const order = prev.find(o => o.id === orderId);
+      if (!order) return prev;
+      closed = {
         ...order,
         status: 'closed',
         closedAt: new Date().toISOString(),
-        finalTotal: order.total - order.discount
+        finalTotal: order.total - (order.discount || 0)
       };
-      setSalesHistory([...salesHistory, closedOrder]);
-      
-      // Remover da lista de pedidos ativos
-      setOrders(orders.filter(o => o.id !== orderId));
-      
-      // Liberar mesa
-      updateTableStatus(order.tableId, 'available', null);
+      return prev.filter(o => o.id !== orderId);
+    });
+
+    if (closed) {
+      setSalesHistory(prev => [...prev, closed]);
+      updateTableStatus(closed.tableId, 'available', null);
     }
   };
 
@@ -227,4 +258,4 @@ export function useApp() {
   }
   return context;
 }
-
+// ...existing code...
