@@ -1,308 +1,228 @@
-import { useState } from 'react';
-import { useApp } from '../contexts/AppContext';
-import { Plus, Edit, Trash2, X, Image as ImageIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button.jsx';
-import { Input } from '@/components/ui/input.jsx';
-import { Label } from '@/components/ui/label.jsx';
-import { Textarea } from '@/components/ui/textarea.jsx';
+import React, { useState, useMemo } from "react";
 
-export default function ProductsView() {
-  const { products, addProduct, updateProduct, deleteProduct } = useApp();
-  const [showModal, setShowModal] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterCategory, setFilterCategory] = useState('all');
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: '',
-    description: '',
-    image: '',
-    stock: ''
-  });
+/*
+ProductsCenterMenu.jsx
+- Menu central tipo "hamburguer" (modal) com categorias
+- Quantidade: input number editável + apenas botões externos (+ / -)
+- Adicionar produto ao pedido
+- Permite fechar comanda vazia
+- Botões de pagamento: Pix, Cartão, Dinheiro (placeholders para integração)
+- Faz validações simples e dá feedback via console (substitua por toasts se quiser)
+*/
 
-  const categories = ['Todos', ...new Set(products.map(p => p.category))];
+const sampleProducts = [
+  { id: "p1", name: "Coca-Cola 350ml", price: 5.5, category: "Bebidas" },
+  { id: "p2", name: "Suco Laranja", price: 6.0, category: "Bebidas" },
+  { id: "p3", name: "X-Burger", price: 18.0, category: "Lanches" },
+  { id: "p4", name: "X-Burger Duplo", price: 24.0, category: "Lanches" },
+  { id: "p5", name: "Pudim", price: 8.0, category: "Sobremesas" },
+  { id: "p6", name: "Sorvete", price: 10.0, category: "Sobremesas" },
+];
 
-  const handleOpenModal = (product = null) => {
-    if (product) {
-      setEditingProduct(product);
-      setFormData({
-        name: product.name,
-        category: product.category,
-        price: product.price.toString(),
-        description: product.description,
-        image: product.image,
-        stock: product.stock.toString()
-      });
-    } else {
-      setEditingProduct(null);
-      setFormData({
-        name: '',
-        category: '',
-        price: '',
-        description: '',
-        image: '',
-        stock: ''
-      });
-    }
-    setShowModal(true);
+export default function ProductsCenterMenu({
+  products = sampleProducts,
+  initialOrder = [],
+  onExportOrder = null, // função opcional para enviar pedido pro backend
+}) {
+  const [open, setOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [order, setOrder] = useState(initialOrder);
+  const [quantityMap, setQuantityMap] = useState({}); // {productId: qty}
+
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(products.map((p) => p.category)));
+    return cats;
+  }, [products]);
+
+  // garante categoria ativa
+  React.useEffect(() => {
+    if (!activeCategory && categories.length) setActiveCategory(categories[0]);
+  }, [categories, activeCategory]);
+
+  // helpers quantidade
+  const setQty = (productId, value) => {
+    const n = Number(value);
+    if (Number.isNaN(n) || n < 0) return;
+    setQuantityMap((s) => ({ ...s, [productId]: n }));
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setEditingProduct(null);
-    setFormData({
-      name: '',
-      category: '',
-      price: '',
-      description: '',
-      image: '',
-      stock: ''
+  const incQty = (productId) => {
+    setQuantityMap((s) => {
+      const cur = Number(s[productId] ?? 0);
+      return { ...s, [productId]: cur + 1 };
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const productData = {
-      name: formData.name,
-      category: formData.category,
-      price: parseFloat(formData.price),
-      description: formData.description,
-      image: formData.image,
-      stock: parseInt(formData.stock)
-    };
+  const decQty = (productId) => {
+    setQuantityMap((s) => {
+      const cur = Number(s[productId] ?? 0);
+      const next = cur - 1;
+      return { ...s, [productId]: next >= 0 ? next : 0 };
+    });
+  };
 
-    if (editingProduct) {
-      updateProduct(editingProduct.id, productData);
+  const addProductToOrder = (product) => {
+    const qty = Number(quantityMap[product.id] ?? 1);
+    if (qty <= 0) {
+      console.warn("Quantidade deve ser maior que zero");
+      return;
+    }
+
+    setOrder((prev) => {
+      // se já existe no pedido, soma quantidade
+      const found = prev.find((i) => i.id === product.id);
+      if (found) {
+        return prev.map((i) =>
+          i.id === product.id ? { ...i, qty: i.qty + qty } : i
+        );
+      }
+      return [...prev, { ...product, qty }];
+    });
+
+    // reset quantidade para 1 após adicionar (opcional)
+    setQuantityMap((s) => ({ ...s, [product.id]: 1 }));
+    console.log(`${qty}x ${product.name} adicionado(s)`);
+  };
+
+  const removeItem = (productId) => {
+    setOrder((prev) => prev.filter((i) => i.id !== productId));
+  };
+
+  const clearOrder = () => {
+    setOrder([]);
+    console.log("Comanda limpa");
+  };
+
+  const closeOrder = (paymentMethod = null) => {
+    // permite fechar mesmo vazio
+    if (order.length === 0) {
+      console.log("Fechando comanda vazia");
     } else {
-      addProduct(productData);
+      console.log("Fechando comanda com itens:", order);
     }
-
-    handleCloseModal();
+    console.log("Método de pagamento:", paymentMethod);
+    // chamada para backend, se necessário:
+    if (onExportOrder) {
+      try {
+        onExportOrder({ order, paymentMethod });
+      } catch (e) {
+        console.error("Erro ao exportar pedido", e);
+      }
+    }
+    // fechar modal e resetar pedido se quiser
+    setOpen(false);
   };
 
-  const handleDelete = (productId) => {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
-      deleteProduct(productId);
-    }
-  };
-
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === 'all' || product.category === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
-
+  // UI
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-2">Gestão de Produtos</h2>
-          <p className="text-muted-foreground">Cadastre e gerencie os produtos do bar</p>
+    <>
+      {/* Botão hamburguer que abre o menu central */}
+      <button
+        aria-label="Abrir menu de produtos"
+        onClick={() => setOpen(true)}
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 8,
+          border: "1px solid #ddd",
+          background: "#fff",
+          cursor: "pointer",
+        }}
+      >
+        {/* Icone simples */}
+        <div style={{ width: 22 }}>
+          <div style={{ height: 3, background: "#333", margin: "4px 0" }} />
+          <div style={{ height: 3, background: "#333", margin: "4px 0" }} />
+          <div style={{ height: 3, background: "#333", margin: "4px 0" }} />
         </div>
-        <Button onClick={() => handleOpenModal()}>
-          <Plus className="w-4 h-4 mr-2" />
-          Novo Produto
-        </Button>
-      </div>
+      </button>
 
-      {/* Filtros */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
-          <Label htmlFor="search">Buscar</Label>
-          <Input
-            id="search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Digite o nome ou categoria"
-            className="mt-2"
-          />
-        </div>
-        <div>
-          <Label htmlFor="category">Categoria</Label>
-          <select
-            id="category"
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="w-full mt-2 px-3 py-2 bg-input border border-border rounded-md text-foreground"
+      {/* Modal central */}
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.45)",
+            zIndex: 1000,
+            padding: 20,
+          }}
+          onMouseDown={(e) => {
+            // fecha clicando fora do modal
+            if (e.target === e.currentTarget) setOpen(false);
+          }}
+        >
+          <div
+            style={{
+              width: "90%",
+              maxWidth: 1100,
+              maxHeight: "90vh",
+              overflow: "auto",
+              background: "#fff",
+              borderRadius: 12,
+              padding: 20,
+              boxShadow: "0 12px 40px rgba(0,0,0,0.25)",
+            }}
           >
-            <option value="all">Todos</option>
-            {categories.filter(c => c !== 'Todos').map(category => (
-              <option key={category} value={category}>{category}</option>
-            ))}
-          </select>
-        </div>
-      </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 12,
+              }}
+            >
+              <h2 style={{ margin: 0 }}>Produtos</h2>
 
-      {/* Lista de produtos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredProducts.map(product => (
-          <div key={product.id} className="product-card">
-            {product.image ? (
-              <img src={product.image} alt={product.name} />
-            ) : (
-              <div className="w-full h-32 bg-muted rounded-md mb-2 flex items-center justify-center">
-                <ImageIcon className="w-12 h-12 text-muted-foreground" />
-              </div>
-            )}
-            
-            <div className="space-y-2">
-              <h3 className="font-bold text-lg">{product.name}</h3>
-              <span className="category-badge">{product.category}</span>
-              <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>
-              
-              <div className="flex items-center justify-between pt-2">
-                <div>
-                  <p className="text-2xl font-bold text-primary">R$ {product.price.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground">Estoque: {product.stock}</p>
-                </div>
-              </div>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <button
+                  onClick={() => {
+                    // permite fechar comanda vazia
+                    closeOrder(null);
+                  }}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: 6,
+                    border: "1px solid #ddd",
+                    background: "#f5f5f5",
+                    cursor: "pointer",
+                  }}
+                >
+                  Fechar comanda (sem pagamento)
+                </button>
 
-              <div className="flex gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleOpenModal(product)}
-                  className="flex-1"
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: 6,
+                    border: "none",
+                    background: "#e74c3c",
+                    color: "#fff",
+                    cursor: "pointer",
+                  }}
                 >
-                  <Edit className="w-4 h-4 mr-1" />
-                  Editar
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(product.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                  Fechar
+                </button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
 
-      {filteredProducts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground text-lg">Nenhum produto encontrado</p>
-        </div>
-      )}
-
-      {/* Modal de Cadastro/Edição */}
-      {showModal && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content p-6 max-w-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold">
-                {editingProduct ? 'Editar Produto' : 'Novo Produto'}
-              </h3>
-              <Button variant="ghost" size="icon" onClick={handleCloseModal}>
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="name">Nome do Produto *</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="mt-2"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="category">Categoria *</Label>
-                  <Input
-                    id="category"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    required
-                    className="mt-2"
-                    placeholder="Ex: Bebidas, Narguilé, Sinuca"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="price">Preço (R$) *</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    required
-                    className="mt-2"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="stock">Estoque Inicial *</Label>
-                  <Input
-                    id="stock"
-                    type="number"
-                    min="0"
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    required
-                    className="mt-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="description">Descrição</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="mt-2"
-                  rows={3}
-                  placeholder="Descreva o produto..."
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="image">URL da Imagem</Label>
-                <Input
-                  id="image"
-                  type="url"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="mt-2"
-                  placeholder="https://exemplo.com/imagem.jpg"
-                />
-                {formData.image && (
-                  <div className="mt-3">
-                    <img
-                      src={formData.image}
-                      alt="Preview"
-                      className="w-32 h-32 object-cover rounded-md border border-border"
-                      onError={(e) => e.target.style.display = 'none'}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <Button type="button" variant="outline" onClick={handleCloseModal} className="flex-1">
-                  Cancelar
-                </Button>
-                <Button type="submit" className="flex-1">
-                  {editingProduct ? 'Salvar Alterações' : 'Cadastrar Produto'}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
+            {/* Categorias (abas) */}
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    border: activeCategory === cat ? "2px solid #2563eb" : "1px solid #ddd",
+                    background: activeCategory === cat ? "#eef2ff" : "#fff",—
