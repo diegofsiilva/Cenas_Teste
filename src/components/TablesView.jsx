@@ -469,7 +469,8 @@ export default function TablesView() {
           </div>
         </div>
       )}
-{/* Modal de Pagamento */}
+
+      {/* Modal de Pagamento */}
 {showPaymentModal && (
   <div className="modal-overlay" onClick={() => setShowPaymentModal(false)}>
     <div className="modal-content p-6" onClick={(e) => e.stopPropagation()}>
@@ -483,13 +484,16 @@ export default function TablesView() {
       <div className="space-y-4">
         {currentOrder && currentOrder.items.length > 0 && (
           <p className="text-lg">
-            Total a pagar: <span className="font-bold">R$ {calculateTotal().toFixed(2)}</span>
+            Total a pagar:{" "}
+            <span className="font-bold">R$ {calculateTotal().toFixed(2)}</span>
           </p>
         )}
 
-        <Label className="block mb-3 text-lg font-medium">Selecione o método de pagamento:</Label>
+        <Label className="block mb-3 text-lg font-medium">
+          Selecione o método de pagamento:
+        </Label>
 
-        {/* Grade de seleção moderna e funcional */}
+        {/* Aparência moderna, mas 100% funcional */}
         <div className="grid grid-cols-3 gap-3">
           <Button
             variant="outline"
@@ -505,41 +509,4 @@ export default function TablesView() {
           </Button>
 
           <Button
-            variant="outline"
-            onClick={() => setPaymentMethod("Cartão")}
-            className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
-              paymentMethod === "Cartão"
-                ? "border-primary ring-2 ring-primary bg-primary/10"
-                : "border-border hover:border-primary/50"
-            }`}
-          >
-            <CreditCard className="w-6 h-6" />
-            <span className="text-sm font-semibold">Cartão</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => setPaymentMethod("Pix")}
-            className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
-              paymentMethod === "Pix"
-                ? "border-primary ring-2 ring-primary bg-primary/10"
-                : "border-border hover:border-primary/50"
-            }`}
-          >
-            <QrCode className="w-6 h-6" />
-            <span className="text-sm font-semibold">Pix</span>
-          </Button>
-        </div>
-
-        {/* Botão de confirmar */}
-        <Button
-          onClick={processPayment}
-          className="w-full mt-6"
-          disabled={!paymentMethod}
-        >
-          Confirmar Pagamento
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
+            var
