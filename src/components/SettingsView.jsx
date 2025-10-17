@@ -241,15 +241,12 @@ export default function SettingsView() {
                 <p className="text-sm text-muted-foreground mb-2">Badge de Categoria</p>
                 <span
                   className="inline-block px-3 py-1 rounded-full text-xs font-semibold border"
-                  style={{
-                    backgroundColor: `${tempSettings.primaryColor}20`,
-                    color: tempSettings.primaryColor,
-                    borderColor: `${tempSettings.primaryColor}50`
-                  }}
+               
                 >
                   Bebidas
                 </span>
               </div>
+
 
               {/* Preview de gradiente */}
               <div>

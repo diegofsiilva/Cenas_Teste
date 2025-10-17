@@ -19,6 +19,7 @@ export function AppProvider({ children }) {
     { id: 10, name: 'Bistrô 2', type: 'bistro', position: 'bottom', status: 'available', orderId: null },
   ]);
 
+  
   // Estado dos produtos
   const [products, setProducts] = useLocalStorage('products', [
     {
