@@ -469,59 +469,77 @@ export default function TablesView() {
           </div>
         </div>
       )}
+{/* Modal de Pagamento */}
+{showPaymentModal && (
+  <div className="modal-overlay" onClick={() => setShowPaymentModal(false)}>
+    <div className="modal-content p-6" onClick={(e) => e.stopPropagation()}>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-2xl font-bold">Finalizar Pagamento</h3>
+        <Button variant="ghost" size="icon" onClick={() => setShowPaymentModal(false)}>
+          <X className="w-5 h-5" />
+        </Button>
+      </div>
 
-      {/* Modal de Pagamento */}
-      {showPaymentModal && (
-        <div className="modal-overlay" onClick={() => setShowPaymentModal(false)}>
-          <div className="modal-content p-6" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold">Finalizar Pagamento</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowPaymentModal(false)}>
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
+      <div className="space-y-4">
+        {currentOrder && currentOrder.items.length > 0 && (
+          <p className="text-lg">
+            Total a pagar: <span className="font-bold">R$ {calculateTotal().toFixed(2)}</span>
+          </p>
+        )}
 
-            <div className="space-y-4">
-              {currentOrder && currentOrder.items.length > 0 && (
-                <p className="text-lg">Total a pagar: <span className="font-bold">R$ {calculateTotal().toFixed(2)}</span></p>
-              )}
-              <Label>Selecione o método de pagamento:</Label>
-              <div className="grid grid-cols-1 gap-3">
-                <Button
-                  variant={paymentMethod === 'Dinheiro' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('Dinheiro')}
-                  className="justify-start"
-                >
-                  <Banknote className="w-5 h-5 mr-2" /> Dinheiro
-                </Button>
-                <Button
-                  variant={paymentMethod === 'Pix' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('Pix')}
-                  className="justify-start"
-                >
-                  <QrCode className="w-5 h-5 mr-2" /> Pix
-                </Button>
-                <Button
-                  variant={paymentMethod === 'Cartão' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('Cartão')}
-                  className="justify-start"
-                >
-                  <CreditCard className="w-5 h-5 mr-2" /> Cartão
-                </Button>
-              </div>
+        <Label className="block mb-3 text-lg font-medium">Selecione o método de pagamento:</Label>
 
-              <Button
-                onClick={processPayment}
-                className="w-full mt-4"
-                disabled={!paymentMethod}
-              >
-                Confirmar Pagamento
-              </Button>
-            </div>
-          </div>
+        {/* Grade de seleção moderna e funcional */}
+        <div className="grid grid-cols-3 gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setPaymentMethod("Dinheiro")}
+            className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
+              paymentMethod === "Dinheiro"
+                ? "border-primary ring-2 ring-primary bg-primary/10"
+                : "border-border hover:border-primary/50"
+            }`}
+          >
+            <Banknote className="w-6 h-6" />
+            <span className="text-sm font-semibold">Dinheiro</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => setPaymentMethod("Cartão")}
+            className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
+              paymentMethod === "Cartão"
+                ? "border-primary ring-2 ring-primary bg-primary/10"
+                : "border-border hover:border-primary/50"
+            }`}
+          >
+            <CreditCard className="w-6 h-6" />
+            <span className="text-sm font-semibold">Cartão</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => setPaymentMethod("Pix")}
+            className={`flex flex-col items-center justify-center gap-2 p-4 h-auto transition-all ${
+              paymentMethod === "Pix"
+                ? "border-primary ring-2 ring-primary bg-primary/10"
+                : "border-border hover:border-primary/50"
+            }`}
+          >
+            <QrCode className="w-6 h-6" />
+            <span className="text-sm font-semibold">Pix</span>
+          </Button>
         </div>
-      )}
-    </div>
-  );
-}
 
+        {/* Botão de confirmar */}
+        <Button
+          onClick={processPayment}
+          className="w-full mt-6"
+          disabled={!paymentMethod}
+        >
+          Confirmar Pagamento
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
