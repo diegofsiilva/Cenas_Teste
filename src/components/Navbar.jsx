@@ -112,4 +112,6 @@ export default function Navbar({ currentView, setCurrentView }) {
       </div>
     </nav>
   );
+
+  
 }

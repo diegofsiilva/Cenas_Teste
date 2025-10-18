@@ -1,40 +1,31 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { Users, Clock, DollarSign, X, Plus, Minus, Trash2, CreditCard, QrCode, Banknote } from 'lucide-react';
+import { Users, Clock, DollarSign, X, Plus, Minus, Trash2, CreditCard, Smartphone, Banknote } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Label } from '@/components/ui/label.jsx';
-import { toast } from 'react-hot-toast'; // Para feedback visual
 
 export default function TablesView() {
   const { tables, orders, createOrder, closeOrder, addItemToOrder, removeItemFromOrder, applyDiscount, products } = useApp();
   const [selectedTable, setSelectedTable] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [customPrice, setCustomPrice] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [discountValue, setDiscountValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-
-  // Agrupar produtos por categoria para exibição
-  const groupedProducts = useMemo(() => {
-    const groups = {};
-    products.forEach(product => {
-      if (!groups[product.category]) {
-        groups[product.category] = [];
-      }
-      groups[product.category].push(product);
-    });
-    return groups;
-  }, [products]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('dinheiro');
 
   const handleTableClick = (table) => {
     setSelectedTable(table);
-    setShowOrderModal(true);
+    if (table.status === 'available') {
+      setShowOrderModal(true);
+    } else {
+      setShowOrderModal(true);
+    }
   };
 
   const handleOpenOrder = () => {
@@ -44,57 +35,33 @@ export default function TablesView() {
       setShowOrderModal(false);
     }
   };
-  
 
   const handleAddProduct = () => {
-    if (!selectedProduct) {
-      toast.error('Selecione um produto para adicionar!');
-      return;
-    }
-    if (quantity <= 0) {
-      toast.error('A quantidade deve ser maior que zero!');
-      return;
-    }
-
-    const order = orders.find(o => o.id === selectedTable.orderId);
-    if (order) {
-      const price = customPrice !== '' ? parseFloat(customPrice) : selectedProduct.price;
-      addItemToOrder(order.id, selectedProduct, quantity, price);
-      toast.success(`${quantity}x ${selectedProduct.name} adicionado(s) à comanda!`);
-      setShowProductModal(false);
-      setSelectedProduct(null);
-      setCustomPrice('');
-      setQuantity(1);
-      setSearchTerm('');
-    }
-  };
-
-  const handleCloseOrderClick = () => {
-    setShowPaymentModal(true);
-  };
-
-  const processPayment = () => {
-    if (!paymentMethod) {
-      toast.error('Selecione um método de pagamento!');
-      return;
-    }
-
-    if (selectedTable) {
-      if (selectedTable.orderId) {
-        // Comanda existente
-        console.log(`Processando pagamento da comanda ${selectedTable.orderId} com ${paymentMethod}. Total: R$ ${calculateTotal().toFixed(2)}`);
-        closeOrder(selectedTable.orderId, paymentMethod);
-        toast.success(`Comanda ${selectedTable.orderId} fechada com ${paymentMethod}!`);
-      } else {
-        // Mesa disponível ou sem comanda, apenas liberar
-        console.log(`Liberando mesa ${selectedTable.id} com ${paymentMethod}.`);
-        closeOrder(selectedTable.id, paymentMethod); // Assumindo que closeOrder pode liberar a mesa mesmo sem orderId
-        toast.success(`Mesa ${selectedTable.id} liberada!`);
+    if (selectedTable && selectedProduct) {
+      const order = orders.find(o => o.id === selectedTable.orderId);
+      if (order) {
+        const price = customPrice ? parseFloat(customPrice) : null;
+        addItemToOrder(order.id, selectedProduct, quantity, price);
+        setShowProductModal(false);
+        setSelectedProduct(null);
+        setCustomPrice('');
+        setQuantity(1);
+        setSearchTerm('');
       }
+    }
+  };
+
+  const handleCloseOrder = () => {
+    setShowConfirmModal(true);
+  };
+
+  const confirmCloseOrder = () => {
+    if (selectedTable && selectedTable.orderId) {
+      closeOrder(selectedTable.orderId, paymentMethod);
       setSelectedTable(null);
       setShowOrderModal(false);
-      setShowPaymentModal(false);
-      setPaymentMethod('');
+      setShowConfirmModal(false);
+      setPaymentMethod('dinheiro');
     }
   };
 
@@ -102,14 +69,7 @@ export default function TablesView() {
     if (selectedTable && selectedTable.orderId && discountValue) {
       applyDiscount(selectedTable.orderId, parseFloat(discountValue));
       setDiscountValue('');
-      toast.success(`Desconto de R$ ${parseFloat(discountValue).toFixed(2)} aplicado!`);
     }
-  };
-
-  const calculateTotal = () => {
-    if (!currentOrder) return 0;
-    const totalItems = currentOrder.items.reduce((sum, item) => sum + item.subtotal, 0);
-    return totalItems - (currentOrder.discount || 0);
   };
 
   const currentOrder = selectedTable?.orderId ? orders.find(o => o.id === selectedTable.orderId) : null;
@@ -124,12 +84,6 @@ export default function TablesView() {
     topRight: tables.filter(t => t.position === 'top-right'),
     bottom: tables.filter(t => t.position === 'bottom'),
   };
-
-  // Resetar quantidade ao selecionar um novo produto
-  useEffect(() => {
-    setQuantity(1);
-    setCustomPrice('');
-  }, [selectedProduct]);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -335,30 +289,20 @@ export default function TablesView() {
                   )}
                   <div className="flex items-center justify-between text-2xl font-bold mt-2 pt-2 border-t border-primary/30">
                     <span>Total:</span>
-                    <span className="text-primary">R$ {calculateTotal().toFixed(2)}</span>
+                    <span className="text-primary">R$ {(currentOrder.total - currentOrder.discount).toFixed(2)}</span>
                   </div>
                 </div>
 
-                {/* Botão de fechar comanda que abre o modal de pagamento */}
+                {/* Botão de fechar */}
                 <Button
-                  onClick={handleCloseOrderClick}
+                  onClick={handleCloseOrder}
                   className="w-full bg-green-600 hover:bg-green-700"
                 >
                   <DollarSign className="w-5 h-5 mr-2" />
                   Fechar Comanda
                 </Button>
               </div>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-muted-foreground">Nenhuma comanda aberta para esta mesa. Você pode abrir uma nova comanda ou liberar a mesa.</p>
-                <Button onClick={handleOpenOrder} className="w-full">
-                  Abrir Nova Comanda
-                </Button>
-                <Button onClick={handleCloseOrderClick} variant="outline" className="w-full">
-                  Liberar Mesa
-                </Button>
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       )}
@@ -386,30 +330,20 @@ export default function TablesView() {
                 />
               </div>
 
-              <div className="max-h-96 overflow-y-auto pr-2">
-                {Object.keys(groupedProducts).map(category => (
-                  <div key={category} className="mb-4">
-                    <h4 className="text-lg font-semibold mb-2 sticky top-0 bg-white z-10 py-1">{category}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {groupedProducts[category].filter(product =>
-                        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        product.category.toLowerCase().includes(searchTerm.toLowerCase())
-                      ).map(product => (
-                        <div
-                          key={product.id}
-                          onClick={() => setSelectedProduct(product)}
-                          className={`product-card ${selectedProduct?.id === product.id ? 'border-primary shadow-lg' : ''}`}
-                        >
-                          {product.image && (
-                            <img src={product.image} alt={product.name} />
-                          )}
-                          <h4 className="font-semibold text-sm">{product.name}</h4>
-                          <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
-                          <p className="text-primary font-bold">R$ {product.price.toFixed(2)}</p>
-                          <p className="text-xs text-muted-foreground">Estoque: {product.stock}</p>
-                        </div>
-                      ))}
-                    </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                {filteredProducts.map(product => (
+                  <div
+                    key={product.id}
+                    onClick={() => setSelectedProduct(product)}
+                    className={`product-card ${selectedProduct?.id === product.id ? 'border-primary shadow-lg' : ''}`}
+                  >
+                    {product.image && (
+                      <img src={product.image} alt={product.name} />
+                    )}
+                    <h4 className="font-semibold text-sm">{product.name}</h4>
+                    <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
+                    <p className="text-primary font-bold">R$ {product.price.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground">Estoque: {product.stock}</p>
                   </div>
                 ))}
               </div>
@@ -422,25 +356,22 @@ export default function TablesView() {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       >
                         <Minus className="w-4 h-4" />
                       </Button>
                       <Input
                         id="quantity"
-                        type="text"
+                        type="number"
                         min="1"
                         value={quantity}
-                        onChange={(e) => {
-                          const val = parseInt(e.target.value);
-                          setQuantity(isNaN(val) ? '' : Math.max(1, val));
-                        }}
+                        onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                         className="text-center"
                       />
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => setQuantity(prev => prev + 1)}
+                        onClick={() => setQuantity(quantity + 1)}
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
@@ -448,10 +379,10 @@ export default function TablesView() {
                   </div>
 
                   <div>
-                    <Label htmlFor="customPrice">Desconto (opcional)</Label>
+                    <Label htmlFor="customPrice">Preço Customizado (opcional)</Label>
                     <Input
                       id="customPrice"
-                      type="text"
+                      type="number"
                       step="0.01"
                       value={customPrice}
                       onChange={(e) => setCustomPrice(e.target.value)}
@@ -470,53 +401,96 @@ export default function TablesView() {
         </div>
       )}
 
-      {/* Modal de Pagamento */}
-      {showPaymentModal && (
-        <div className="modal-overlay" onClick={() => setShowPaymentModal(false)}>
-          <div className="modal-content p-6" onClick={(e) => e.stopPropagation()}>
+      {/* Modal de Confirmação de Fechamento */}
+      {showConfirmModal && currentOrder && (
+        <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div className="modal-content p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold">Finalizar Pagamento</h3>
-              <Button variant="ghost" size="icon" onClick={() => setShowPaymentModal(false)}>
+              <h3 className="text-2xl font-bold">Confirmar Fechamento</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowConfirmModal(false)}>
                 <X className="w-5 h-5" />
               </Button>
             </div>
 
-            <div className="space-y-4">
-              {currentOrder && currentOrder.items.length > 0 && (
-                <p className="text-lg">Total a pagar: <span className="font-bold">R$ {calculateTotal().toFixed(2)}</span></p>
-              )}
-              <Label>Selecione o método de pagamento:</Label>
-              <div className="grid grid-cols-1 gap-3">
-                <Button
-                  variant={paymentMethod === 'Dinheiro' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('Dinheiro')}
-                  className="justify-start"
-                >
-                  <Banknote className="w-5 h-5 mr-2" /> Dinheiro
-                </Button>
-                <Button
-                  variant={paymentMethod === 'Pix' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('Pix')}
-                  className="justify-start"
-                >
-                  <QrCode className="w-5 h-5 mr-2" /> Pix
-                </Button>
-                <Button
-                  variant={paymentMethod === 'Cartão' ? 'default' : 'outline'}
-                  onClick={() => setPaymentMethod('Cartão')}
-                  className="justify-start"
-                >
-                  <CreditCard className="w-5 h-5 mr-2" /> Cartão
-                </Button>
+            <div className="space-y-6">
+              {/* Resumo da comanda */}
+              <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">Mesa:</span>
+                  <span>{selectedTable?.name}</span>
+                </div>
+                {currentOrder.customerName && (
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold">Cliente:</span>
+                    <span>{currentOrder.customerName}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">Itens:</span>
+                  <span>{currentOrder.items.length}</span>
+                </div>
+                <div className="flex items-center justify-between text-lg font-bold text-primary pt-2 border-t border-border">
+                  <span>Total:</span>
+                  <span>R$ {(currentOrder.total - currentOrder.discount).toFixed(2)}</span>
+                </div>
               </div>
 
-              <Button
-                onClick={processPayment}
-                className="w-full mt-4"
-                disabled={!paymentMethod}
-              >
-                Confirmar Pagamento
-              </Button>
+              {/* Seleção de forma de pagamento */}
+              <div>
+                <Label className="text-base font-semibold mb-3 block">Forma de Pagamento</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    onClick={() => setPaymentMethod('dinheiro')}
+                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      paymentMethod === 'dinheiro'
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <Banknote className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Dinheiro</span>
+                  </button>
+                  <button
+                    onClick={() => setPaymentMethod('cartao')}
+                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      paymentMethod === 'cartao'
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <CreditCard className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Cartão</span>
+                  </button>
+                  <button
+                    onClick={() => setPaymentMethod('pix')}
+                    className={`flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                      paymentMethod === 'pix'
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <Smartphone className="w-6 h-6" />
+                    <span className="text-sm font-semibold">Pix</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Botões de ação */}
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={confirmCloseOrder}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  Confirmar Fechamento
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -524,4 +498,3 @@ export default function TablesView() {
     </div>
   );
 }
-
