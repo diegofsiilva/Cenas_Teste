@@ -58,15 +58,51 @@
 
 /* 🧭 Barra de navegação */
 .navbar {
-  background-color: hsl(var(--card));           /* fundo escuro */
-  color: hsl(var(--card-foreground));           /* texto branco */
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.5rem 1rem;
 }
-.navbar a,
-.navbar button,
-.navbar svg {
+
+.navbar-item {
+  position: relative;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.navbar-item:hover {
+  background-color: hsl(var(--secondary));
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.navbar-item:hover .dropdown,
+.dropdown.active {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
   color: hsl(var(--card-foreground));
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: hsl(var(--secondary));
 }
 
 /* 🟦 Botões */
