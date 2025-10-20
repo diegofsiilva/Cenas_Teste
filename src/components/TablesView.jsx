@@ -95,7 +95,7 @@ export default function TablesView() {
   const TableCard = ({ table }) => {
     const isOccupied = table.status === 'occupied';
     // Ajuste de cores para tema escuro e melhor visibilidade
-   const statusColor = isOccupied ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700';
+    const statusColor = isOccupied ? 'border-red-400 bg-red-100 text-red-800' : 'border-green-400 bg-green-100 text-green-800';
     const statusText = isOccupied ? 'Ocupada' : 'Disponível';
     const totalOrder = table.order.reduce((sum, item) => sum + (item.price * item.qty), 0);
     
@@ -128,18 +128,18 @@ export default function TablesView() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-xl font-medium text-white">{table.name}</CardTitle>
               {isOccupied ? (
-                <Utensils className="h-6 w-6 text-red-500" />
+                <Utensils className="h-6 w-6 text-red-400" />
               ) : (
-                <CheckCircle className="h-6 w-6 text-green-500" />
+                <CheckCircle className="h-6 w-6 text-green-400" />
               )}
             </CardHeader>
             <CardContent className="pt-0">
               <div className="text-3xl font-bold">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
-              <p className={`text-sm font-semibold ${isOccupied ? 'text-red-500' : 'text-green-500'}`}>
+              <p className={`text-sm font-semibold ${isOccupied ? 'text-red-400' : 'text-green-400'}`}>
                 {statusText}
               </p>
               {isOccupied && (
-                <p className="text-xs text-red-500 mt-1">
+                <p className="text-xs text-red-200 mt-1">
                   {table.order.length} {table.order.length === 1 ? 'item' : 'itens'} na comanda
                 </p>
               )}
