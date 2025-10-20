@@ -18,6 +18,8 @@
   :root {
     --radius: 0.5rem;
 
+
+    
     /* 🎨 Paleta escura com suporte a caixas claras */
     --background: 220 30% 10%;
     --foreground: 0 0% 100%;
