@@ -18,21 +18,35 @@
   :root {
     --radius: 0.5rem;
 
-    
-    /* 🎨 Paleta escura com suporte a caixas claras */
-    --background: 220 30% 10%;
-    --foreground: 0 0% 100%;
-    --text: 0 0% 95%;
-    --card: 220 25% 15%;
-    --card-foreground: 0 0% 95%;
-    --card-light: 0 0% 98%;                 /* fundo branco suave */
-    --card-light-foreground: 0 0% 10%;      /* texto preto visível */
-    --primary: 220 90% 56%;
-    --primary-foreground: 0 0% 100%;
-    --border: 220 20% 25%;
-    --ring: 220 90% 56%;
+    /* 🎨 Paleta escura inspirada no Copilot */
+    --background: 220 30% 10%;              /* fundo geral */
+    --foreground: 0 0% 90%;                 /* texto branco */
+    --card: 220 25% 15%;                    /* caixas escuras */
+    --card-foreground: 0 0% 100%;           /* texto nas caixas escuras */
+    --card-light: 0 0% 95%;                 /* caixas claras */
+    --card-light-foreground: 0 0% 10%;      /* texto nas caixas claras */
+    --popover: 220 25% 12%;                 /* fundo de popover */
+    --popover-foreground: 0 0% 100%;        /* texto no popover */
+    --primary: 220 90% 56%;                 /* azul vibrante */
+    --primary-foreground: 0 0% 100%;        /* texto nos botões primários */
+    --secondary: 220 20% 20%;               /* azul escuro secundário */
+    --secondary-foreground: 0 0% 100%;      /* texto secundário */
+    --muted: 220 15% 18%;                   /* fundo apagado */
+    --muted-foreground: 0 0% 80%;           /* texto apagado */
+    --accent: 220 80% 50%;                  /* azul de destaque */
+    --accent-foreground: 0 0% 100%;         /* texto no destaque */
+    --destructive: 0 84% 60%;               /* vermelho para ações perigosas */
+    --border: 220 20% 25%;                  /* bordas */
+    --input: 220 20% 20%;                   /* campos de entrada */
+    --ring: 220 90% 56%;                    /* foco */
+    --chart-1: 220 90% 56%;
+    --chart-2: 220 80% 50%;
+    --chart-3: 220 70% 65%;
+    --chart-4: 220 60% 35%;
+    --chart-5: 220 60% 75%;
   }
 
+  /* Estilização global */
   * {
     border-color: hsl(var(--border));
     outline-color: hsl(var(--ring) / 0.5);
@@ -43,6 +57,7 @@
     color: hsl(var(--foreground));
   }
 
+  /* Estilo para caixas padrão (escuras) */
   .card {
     background-color: hsl(var(--card));
     color: hsl(var(--card-foreground));
@@ -50,24 +65,12 @@
     padding: 1rem;
   }
 
+  /* Estilo para caixas claras com texto escuro */
   .card-light {
-    background-color: hsl(var(--card-light)) !important;
-    color: hsl(var(--card-light-foreground)) !important;
+    background-color: hsl(var(--card-light));
+    color: hsl(var(--card-light-foreground));
     border-radius: var(--radius);
     padding: 1rem;
-  }
-
-  .card-light * {
-    color: hsl(var(--card-light-foreground)) !important;
-  }
-
-  .btn-primary {
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    border-radius: var(--radius);
-    padding: 0.5rem 1rem;
-    border: none;
-    cursor: pointer;
   }
 }
 
