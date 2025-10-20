@@ -18,19 +18,20 @@
   :root {
     --radius: 0.5rem;
 
-    /* 🎨 Paleta escura simplificada */
-    --background: 220 30% 10%;              /* fundo geral */
-    --foreground: 0 0% 100%;                /* texto branco */
-    --text: 0 0% 95%;                       /* texto claro padrão */
-    --card: 220 25% 15%;                    /* caixas azul escuro */
-    --card-foreground: 0 0% 100%;           /* texto nas caixas */
-    --primary: 220 90% 56%;                 /* azul vibrante */
-    --primary-foreground: 0 0% 100%;        /* texto nos botões */
-    --border: 220 20% 25%;                  /* bordas */
-    --ring: 220 90% 56%;                    /* foco */
+    /* 🎨 Paleta escura com suporte a caixas claras */
+    --background: 220 30% 10%;
+    --foreground: 0 0% 100%;
+    --text: 0 0% 95%;
+    --card: 220 25% 15%;
+    --card-foreground: 0 0% 100%;
+    --card-light: 0 0% 98%;
+    --card-light-foreground: 0 0% 10%;
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+    --border: 220 20% 25%;
+    --ring: 220 90% 56%;
   }
 
-  /* Estilização global */
   * {
     border-color: hsl(var(--border));
     outline-color: hsl(var(--ring) / 0.5);
@@ -41,15 +42,20 @@
     color: hsl(var(--foreground));
   }
 
-  /* Caixa padrão */
   .card {
     background-color: hsl(var(--card));
-    color: hsl(var(--text));
+    color: hsl(var(--card-foreground));
     border-radius: var(--radius);
     padding: 1rem;
   }
 
-  /* Botão primário */
+  .card-light {
+    background-color: hsl(var(--card-light));
+    color: hsl(var(--card-light-foreground));
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+
   .btn-primary {
     background-color: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
@@ -63,7 +69,7 @@
 /* 🧭 Barra de navegação */
 .navbar {
   background-color: hsl(var(--card));
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -100,7 +106,7 @@
 
 .dropdown-item {
   padding: 0.75rem 1rem;
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   display: block;
   text-decoration: none;
 }
@@ -121,7 +127,7 @@
 
 .btn-secondary {
   background-color: hsl(var(--card));
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   transition: background-color 0.2s ease;
 }
 .btn-secondary:hover {
@@ -131,7 +137,7 @@
 /* 🪑 Cartões de mesa */
 .table-card {
   background-color: hsl(var(--card));
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   border: 2px solid hsl(var(--primary) / 0.3);
   border-radius: var(--radius);
   padding: 1rem;
@@ -164,7 +170,7 @@
 }
 .modal-content {
   background-color: hsl(var(--card));
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -177,7 +183,7 @@
 /* 🛍️ Cartões de produto */
 .product-card {
   background-color: hsl(var(--card));
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 0.75rem;
@@ -211,7 +217,7 @@
 /* 📊 Cartão de estatísticas */
 .stat-card {
   background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--card) / 0.5));
-  color: hsl(var(--text));
+  color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 1.5rem;
