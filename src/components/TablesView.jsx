@@ -94,14 +94,16 @@ export default function TablesView() {
 
   const TableCard = ({ table }) => {
     const isOccupied = table.status === 'occupied';
-    const statusColor = isOccupied ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50';
+    // Ajuste de cores para tema escuro e melhor visibilidade
+    const statusColor = isOccupied ? 'border-red-600 bg-red-950 text-red-100' : 'border-green-600 bg-green-950 text-green-100';
     const statusText = isOccupied ? 'Ocupada' : 'Disponível';
     const totalOrder = table.order.reduce((sum, item) => sum + (item.price * item.qty), 0);
     
     // Adiciona classes específicas para mesas redondas (Bistrôs)
     // Ajuste: Nos bistrôs, removemos o CardHeader e CardContent padrão para centralizar melhor o conteúdo.
     const isBistro = table.name.includes('Bistro');
-    const shapeClass = isBistro ? 'rounded-full h-32 w-32 flex flex-col items-center justify-center text-center p-2' : 'rounded-lg';
+    // Ajuste: Aumentando o tamanho dos bistrôs para melhor visualização
+    const shapeClass = isBistro ? 'rounded-full h-40 w-40 flex flex-col items-center justify-center text-center p-2' : 'rounded-lg';
     
     // Adiciona o grid-area para posicionamento
     const gridAreaClass = `area-${table.name.toLowerCase().replace(/ /g, '-').replace('á', 'a')}`;
@@ -114,9 +116,9 @@ export default function TablesView() {
         {isBistro ? (
           // Layout simplificado e centralizado para Bistrôs
           <div className="flex flex-col items-center justify-center h-full">
-            <CardTitle className="text-lg font-medium">{table.name}</CardTitle>
-            <div className="text-xl font-bold">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
-            <p className={`text-xs ${isOccupied ? 'text-red-600' : 'text-green-600'}`}>
+            <CardTitle className="text-xl font-medium text-white">{table.name}</CardTitle>
+            <div className="text-2xl font-bold mt-2">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
+            <p className={`text-sm font-semibold mt-1 ${isOccupied ? 'text-red-400' : 'text-green-400'}`}>
               {statusText}
             </p>
           </div>
@@ -124,20 +126,20 @@ export default function TablesView() {
           // Layout padrão para Mesas (retangulares)
           <>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xl font-medium">{table.name}</CardTitle>
+              <CardTitle className="text-xl font-medium text-white">{table.name}</CardTitle>
               {isOccupied ? (
-                <Utensils className="h-6 w-6 text-red-500" />
+                <Utensils className="h-6 w-6 text-red-400" />
               ) : (
-                <CheckCircle className="h-6 w-6 text-green-500" />
+                <CheckCircle className="h-6 w-6 text-green-400" />
               )}
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
-              <p className={`text-xs ${isOccupied ? 'text-red-600' : 'text-green-600'}`}>
+            <CardContent className="pt-0">
+              <div className="text-3xl font-bold">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
+              <p className={`text-sm font-semibold ${isOccupied ? 'text-red-400' : 'text-green-400'}`}>
                 {statusText}
               </p>
               {isOccupied && (
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-red-200 mt-1">
                   {table.order.length} {table.order.length === 1 ? 'item' : 'itens'} na comanda
                 </p>
               )}
