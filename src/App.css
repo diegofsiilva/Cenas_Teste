@@ -13,7 +13,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Variáveis de tema base alteração daqui para baixo*/
+/* Variáveis de tema base */
 @layer base {
   :root {
     --radius: 0.5rem;
@@ -21,6 +21,7 @@
     /* 🎨 Paleta escura simplificada */
     --background: 220 30% 10%;              /* fundo geral */
     --foreground: 0 0% 100%;                /* texto branco */
+    --text: 0 0% 95%;                       /* texto claro padrão */
     --card: 220 25% 15%;                    /* caixas azul escuro */
     --card-foreground: 0 0% 100%;           /* texto nas caixas */
     --primary: 220 90% 56%;                 /* azul vibrante */
@@ -43,7 +44,7 @@
   /* Caixa padrão */
   .card {
     background-color: hsl(var(--card));
-    color: hsl(var(--card-foreground));
+    color: hsl(var(--text));
     border-radius: var(--radius);
     padding: 1rem;
   }
@@ -59,11 +60,10 @@
   }
 }
 
-
-/* 🧭 Barra de navegação (Aqui para cima )*/
+/* 🧭 Barra de navegação */
 .navbar {
   background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+  color: hsl(var(--text));
   border-bottom: 1px solid hsl(var(--border));
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -78,7 +78,7 @@
 }
 
 .navbar-item:hover {
-  background-color: hsl(var(--secondary));
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 .dropdown {
@@ -100,13 +100,13 @@
 
 .dropdown-item {
   padding: 0.75rem 1rem;
-  color: hsl(var(--card-foreground));
+  color: hsl(var(--text));
   display: block;
   text-decoration: none;
 }
 
 .dropdown-item:hover {
-  background-color: hsl(var(--secondary));
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 /* 🟦 Botões */
@@ -120,17 +120,18 @@
 }
 
 .btn-secondary {
-  background-color: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
+  background-color: hsl(var(--card));
+  color: hsl(var(--text));
   transition: background-color 0.2s ease;
 }
 .btn-secondary:hover {
-  background-color: hsl(var(--secondary) / 0.9);
+  background-color: hsl(var(--card) / 0.9);
 }
 
 /* 🪑 Cartões de mesa */
 .table-card {
   background-color: hsl(var(--card));
+  color: hsl(var(--text));
   border: 2px solid hsl(var(--primary) / 0.3);
   border-radius: var(--radius);
   padding: 1rem;
@@ -143,11 +144,11 @@
   transform: scale(1.05);
 }
 .table-card.occupied {
-  border-color: hsl(var(--accent));
-  background-color: hsl(var(--accent) / 0.1);
+  border-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.1);
 }
 .table-card.occupied:hover {
-  box-shadow: 0 4px 12px hsl(var(--accent) / 0.2);
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
 }
 
 /* 🪟 Modal */
@@ -163,6 +164,7 @@
 }
 .modal-content {
   background-color: hsl(var(--card));
+  color: hsl(var(--text));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -175,6 +177,7 @@
 /* 🛍️ Cartões de produto */
 .product-card {
   background-color: hsl(var(--card));
+  color: hsl(var(--text));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 0.75rem;
@@ -208,6 +211,7 @@
 /* 📊 Cartão de estatísticas */
 .stat-card {
   background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--card) / 0.5));
+  color: hsl(var(--text));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -216,7 +220,7 @@
 
 /* 🖱️ Hover em linhas de tabela */
 .table-row-hover:hover {
-  background-color: hsl(var(--muted) / 0.5);
+  background-color: hsl(var(--card) / 0.5);
   transition: background-color 0.2s ease;
   cursor: pointer;
 }
@@ -243,12 +247,12 @@
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(var(--popover));
+  background: hsl(var(--card));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--chart-4));
+  background: hsl(var(--primary) / 0.3);
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--chart-2));
+  background: hsl(var(--primary));
 }
