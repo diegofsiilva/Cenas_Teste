@@ -133,7 +133,7 @@ export default function TablesView() {
                 <CheckCircle className="h-6 w-6 text-green-400" />
               )}
             </CardHeader>
-            <CardContent className="pt-2">
+            <CardContent className="pt-4">
               <div className="text-3xl font-bold">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
               <p className={`text-sm font-semibold ${isOccupied ? 'text-red-400' : 'text-green-400'}`}>
                 {statusText}
