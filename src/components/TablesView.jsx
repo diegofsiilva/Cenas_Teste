@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { useApp } from '../contexts/AppContext'; // Assumindo que AppContext lida com o estado global
-import { Plus, X, Utensils, CheckCircle, ShoppingCart } from 'lucide-react';
+import { useApp } from '../contexts/AppContext';
+import { Plus, X, Utensils, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-
-// Importar o novo componente de seleção de produtos
 import ProductsSelectionView from './ProductsSelectionView';
 
-// Dados de exemplo atualizados para incluir todas as mesas do layout do usuário
 const dummyTables = [
   { id: 1, name: 'Mesa 1', status: 'available', order: [] },
   { id: 2, name: 'Mesa 2', status: 'occupied', order: [{ id: 'prod-1', name: 'Cerveja', price: 10.00, qty: 2 }] },
@@ -22,124 +19,87 @@ const dummyTables = [
 ];
 
 export default function TablesView() {
-  // No código real, você usaria o useApp para obter o estado das mesas e as funções de manipulação
-  // Ex: const { tables, updateTableStatus, addProductToOrder } = useApp();
-  
   const [tables, setTables] = useState(dummyTables);
   const [selectedTable, setSelectedTable] = useState(null);
   const [isAddingProducts, setIsAddingProducts] = useState(false);
 
-  const handleSelectTable = (table) => {
-    setSelectedTable(table);
-  };
-
+  const handleSelectTable = (table) => setSelectedTable(table);
   const handleBackToTables = () => {
     setSelectedTable(null);
     setIsAddingProducts(false);
   };
-
-  const handleOpenAddProducts = () => {
-    setIsAddingProducts(true);
-  };
+  const handleOpenAddProducts = () => setIsAddingProducts(true);
 
   const handleAddProductToOrder = (productData) => {
     if (!selectedTable) return;
 
-    setTables(prevTables => {
-      return prevTables.map(table => {
+    setTables(prevTables =>
+      prevTables.map(table => {
         if (table.id === selectedTable.id) {
           const existingItem = table.order.find(item => item.id === productData.id);
-          let newOrder;
-
-          if (existingItem) {
-            newOrder = table.order.map(item =>
-              item.id === productData.id ? { ...item, qty: item.qty + 1 } : item
-            );
-          } else {
-            newOrder = [...table.order, { ...productData, qty: 1 }];
-          }
-
-          // Simula a mudança de status para 'occupied' se a mesa estiver 'available'
+          const newOrder = existingItem
+            ? table.order.map(item =>
+                item.id === productData.id ? { ...item, qty: item.qty + 1 } : item
+              )
+            : [...table.order, { ...productData, qty: 1 }];
           const newStatus = table.status === 'available' ? 'occupied' : table.status;
-
           return { ...table, status: newStatus, order: newOrder };
         }
         return table;
-      });
-    });
-
-    // Atualiza o estado da mesa selecionada para refletir a mudança imediatamente
-    setSelectedTable(prevTable => {
-        const updatedTable = tables.find(t => t.id === prevTable.id);
-        if (updatedTable) {
-            // Recalcula o estado da mesa selecionada com os dados atualizados
-            const existingItem = updatedTable.order.find(item => item.id === productData.id);
-            let newOrder;
-            if (existingItem) {
-                newOrder = updatedTable.order.map(item =>
-                    item.id === productData.id ? { ...item, qty: item.qty + 1 } : item
-                );
-            } else {
-                newOrder = [...updatedTable.order, { ...productData, qty: 1 }];
-            }
-            const newStatus = updatedTable.status === 'available' ? 'occupied' : updatedTable.status;
-            return { ...updatedTable, status: newStatus, order: newOrder };
-        }
-        return prevTable;
-    });
-    
-    // Após adicionar o produto, volta para a visualização da comanda
+      })
+    );
     setIsAddingProducts(false);
   };
 
+  // 🔹 Card de cada mesa
   const TableCard = ({ table }) => {
     const isOccupied = table.status === 'occupied';
-    // Ajuste de cores para tema escuro e melhor visibilidade
-    const statusColor = isOccupied ? 'border-red-200 bg-red-600 text-red-200' : 'border-green-300 bg-green-900 text-green-200';
+    const statusColor = isOccupied
+      ? 'border border-red-300 bg-red-500/70 text-white hover:bg-red-500/90'
+      : 'border border-green-300 bg-green-700/70 text-white hover:bg-green-700/90';
+
     const statusText = isOccupied ? 'Ocupada' : 'Disponível';
-    const totalOrder = table.order.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    
-    // Adiciona classes específicas para mesas redondas (Bistrôs)
-    // Ajuste: Nos bistrôs, removemos o CardHeader e CardContent padrão para centralizar melhor o conteúdo.
+    const totalOrder = table.order.reduce((sum, item) => sum + item.price * item.qty, 0);
     const isBistro = table.name.includes('Bistro');
-    // Ajuste: Aumentando o tamanho dos bistrôs para melhor visualização
-    const shapeClass = isBistro ? 'rounded-full h-40 w-40 flex flex-col items-center justify-center text-center p-2' : 'rounded-lg';
-    
-    // Adiciona o grid-area para posicionamento
+    const shapeClass = isBistro
+      ? 'rounded-full h-40 w-40 flex flex-col items-center justify-center text-center p-3'
+      : 'rounded-xl p-4 flex flex-col justify-between text-center';
     const gridAreaClass = `area-${table.name.toLowerCase().replace(/ /g, '-').replace('á', 'a')}`;
 
     return (
-      <Card 
-        className={`cursor-pointer transition-all hover:shadow-lg ${statusColor} ${shapeClass} ${gridAreaClass}`}
+      <Card
+        className={`cursor-pointer transition-all duration-200 hover:shadow-lg ${statusColor} ${shapeClass} ${gridAreaClass}`}
         onClick={() => handleSelectTable(table)}
       >
         {isBistro ? (
-          // Layout simplificado e centralizado para Bistrôs
           <div className="flex flex-col items-center justify-center h-full">
-            <CardTitle className="text-xl font-medium text-white">{table.name}</CardTitle>
-            <div className="text-2xl font-bold mt-2">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
-            <p className={`text-sm font-semibold mt-1 ${isOccupied ? 'text-red-400' : 'text-green-400'}`}>
+            <CardTitle className="text-lg font-semibold">{table.name}</CardTitle>
+            <div className="text-2xl font-bold mt-1">
+              {isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}
+            </div>
+            <p className={`text-sm font-medium mt-1 ${isOccupied ? 'text-red-200' : 'text-green-200'}`}>
               {statusText}
             </p>
           </div>
         ) : (
-          // Layout padrão para Mesas (retangulares)
           <>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xl font-medium text-white">{table.name}</CardTitle>
+            <CardHeader className="flex flex-col items-center justify-center pb-0">
+              <CardTitle className="text-lg font-semibold">{table.name}</CardTitle>
               {isOccupied ? (
-                <Utensils className="h-6 w-6 text-red-400" />
+                <Utensils className="h-5 w-5 text-red-200 mt-1" />
               ) : (
-                <CheckCircle className="h-6 w-6 text-green-400" />
+                <CheckCircle className="h-5 w-5 text-green-200 mt-1" />
               )}
             </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-3xl font-bold">{isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}</div>
-              <p className={`text-sm font-semibold ${isOccupied ? 'text-red-400' : 'text-green-400'}`}>
+            <CardContent className="flex flex-col items-center justify-center mt-1">
+              <div className="text-2xl font-bold mb-1">
+                {isOccupied ? `R$ ${totalOrder.toFixed(2)}` : 'Livre'}
+              </div>
+              <p className={`text-sm font-medium ${isOccupied ? 'text-red-200' : 'text-green-200'}`}>
                 {statusText}
               </p>
               {isOccupied && (
-                <p className="text-xs text-red-200 mt-1">
+                <p className="text-xs text-red-100 mt-1">
                   {table.order.length} {table.order.length === 1 ? 'item' : 'itens'} na comanda
                 </p>
               )}
@@ -151,7 +111,7 @@ export default function TablesView() {
   };
 
   const OrderView = ({ table }) => {
-    const total = table.order.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const total = table.order.reduce((sum, item) => sum + item.price * item.qty, 0);
 
     return (
       <div className="space-y-4">
@@ -163,7 +123,6 @@ export default function TablesView() {
           </Button>
         </div>
 
-        {/* Lista de Itens da Comanda */}
         <div className="space-y-3">
           {table.order.length === 0 ? (
             <p className="text-muted-foreground">Nenhum item na comanda. Adicione produtos!</p>
@@ -172,7 +131,9 @@ export default function TablesView() {
               <div key={index} className="flex justify-between items-center p-3 border rounded-lg bg-white">
                 <div className="flex-1">
                   <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">R$ {item.price.toFixed(2)} x {item.qty}</p>
+                  <p className="text-sm text-muted-foreground">
+                    R$ {item.price.toFixed(2)} x {item.qty}
+                  </p>
                 </div>
                 <p className="font-bold">R$ {(item.price * item.qty).toFixed(2)}</p>
               </div>
@@ -180,26 +141,23 @@ export default function TablesView() {
           )}
         </div>
 
-        {/* Total da Comanda */}
         <div className="border-t pt-4 flex justify-between items-center text-xl font-bold">
           <span>Total:</span>
           <span>R$ {total.toFixed(2)}</span>
         </div>
 
-        {/* Ações da Mesa */}
         <div className="flex gap-4 pt-4">
-            <Button variant="outline" className="flex-1">
-                Fechar Comanda
-            </Button>
-            <Button variant="destructive" className="flex-1">
-                Transferir Mesa
-            </Button>
+          <Button variant="outline" className="flex-1">
+            Fechar Comanda
+          </Button>
+          <Button variant="destructive" className="flex-1">
+            Transferir Mesa
+          </Button>
         </div>
       </div>
     );
   };
 
-  // Renderização principal
   if (selectedTable) {
     return (
       <div className="container mx-auto px-4 py-6">
@@ -211,20 +169,17 @@ export default function TablesView() {
         </div>
 
         {isAddingProducts ? (
-            // Exibir o componente de seleção de produtos
-            <ProductsSelectionView 
-                onProductSelect={handleAddProductToOrder}
-                onCancel={() => setIsAddingProducts(false)} // Volta para a OrderView
-            />
+          <ProductsSelectionView
+            onProductSelect={handleAddProductToOrder}
+            onCancel={() => setIsAddingProducts(false)}
+          />
         ) : (
-            // Exibir a comanda da mesa selecionada
-            <OrderView table={selectedTable} />
+          <OrderView table={selectedTable} />
         )}
       </div>
     );
   }
 
-  // Visualização de Mesas com Layout Personalizado
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
@@ -235,43 +190,10 @@ export default function TablesView() {
         </Button>
       </div>
 
-      {/* 
-        Ajuste do Layout com CSS Grid e grid-template-areas para replicar o desenho.
-        As classes de grid-area (ex: area-mesa-1) são adicionadas no componente TableCard.
-        
-        Você precisará garantir que essas classes CSS personalizadas sejam carregadas 
-        no seu projeto (ex: no seu arquivo global de estilos ou via um plugin do Tailwind).
-      */}
       <style jsx>{`
         .tables-grid {
           display: grid;
-          grid-template-columns: repeat(6, 1fr) 100px; /* 6 colunas para mesas + 1 para bistrôs */
-          grid-template-rows: repeat(3, 100px) 100px; /* 3 linhas para mesas + 1 para espaçamento */
+          grid-template-columns: repeat(6, 1fr) 100px;
+          grid-template-rows: repeat(3, 100px) 100px;
           gap: 20px;
           grid-template-areas:
-            "mesa-1 mesa-2 mesa-3 mesa-4 mesa-5 sinuca bistro-1"
-            ". . . . . sinuca ."
-            ". . . mesa-6 mesa-7 . bistro-2"
-            ". . . . . . ."; /* Linha extra para espaçamento inferior */
-        }
-
-        .area-mesa-1 { grid-area: mesa-1; }
-        .area-mesa-2 { grid-area: mesa-2; }
-        .area-mesa-3 { grid-area: mesa-3; }
-        .area-mesa-4 { grid-area: mesa-4; }
-        .area-mesa-5 { grid-area: mesa-5; }
-        .area-mesa-6 { grid-area: mesa-6; }
-        .area-mesa-7 { grid-area: mesa-7; }
-        .area-sinuca { grid-area: sinuca; }
-        .area-bistro-1 { grid-area: bistro-1; }
-        .area-bistro-2 { grid-area: bistro-2; }
-      `}</style>
-
-      <div className="tables-grid">
-        {tables.map(table => (
-          <TableCard key={table.id} table={table} />
-        ))}
-      </div>
-    </div>
-  );
-}
