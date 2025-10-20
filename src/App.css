@@ -18,7 +18,6 @@
   :root {
     --radius: 0.5rem;
 
-
     
     /* 🎨 Paleta escura com suporte a caixas claras */
     --background: 220 30% 10%;
@@ -252,6 +251,7 @@
 .pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
 
 /* 🖱️ Scrollbar personalizada */
 ::-webkit-scrollbar {
