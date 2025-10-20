@@ -5,170 +5,230 @@
 /* Variantes personalizadas para modo escuro */
 @custom-variant dark (&:is(.dark *));
 
+/* Tamanhos de borda arredondada */
+@theme {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
 /* Variáveis de tema base */
 @layer base {
   :root {
-    --radius: 0.5rem; /* Base: 8px */
+    --radius: 0.5rem;
 
     /* 🎨 Paleta escura com suporte a caixas claras */
-    --background: 220 30% 10%; /* Fundo Principal (Escuro) */
-    --foreground: 0 0% 100%; /* Cor do Texto Principal (Branco) */
-    --text: 0 0% 95%; /* Texto Secundário */
-    --card: 220 25% 15%; /* Fundo do Card (Escuro) */
-    --card-foreground: 0 0% 100%; /* Texto do Card (Branco) */
-    
-    /* 🌟 CORREÇÃO APLICADA: Garantindo texto escuro em fundo claro */
-    --card-light: 0 0% 98%; /* Fundo do Card Claro (Quase Branco) */
-    --card-light-foreground: 0 0% 10%; /* Texto do Card Claro (Quase Preto) */
-    
-    --primary: 220 90% 56%; /* Cor Principal (Azul) */
-    --primary-foreground: 0 0% 100%; /* Texto do Botão Principal (Branco) */
-    --border: 220 20% 25%; /* Cor da Borda */
-    --ring: 220 90% 56%; /* Cor do Anel de Foco */
+    --background: 220 30% 10%;
+    --foreground: 0 0% 100%;
+    --text: 0 0% 95%;
+    --card: 220 25% 15%;
+    --card-foreground: 0 0% 100%;
+    --card-light: 0 0% 98%;
+    --card-light-foreground: 0 0% 10%;
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+    --border: 220 20% 25%;
+    --ring: 220 90% 56%;
   }
 
-  /* Aplica o estilo de borda e anel de foco em todos os elementos */
   * {
     border-color: hsl(var(--border));
     outline-color: hsl(var(--ring) / 0.5);
-  }
-
-  /* Garante um foco visível para acessibilidade */
-  :focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
   }
 
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
-}
 
-/* 🧱 Componentes: Usando @apply para compor classes e manter o CSS limpo */
-@layer components {
-  /* Cartões Genéricos */
   .card {
-    /* bg-card, text-card-foreground, arredondamento padrão, padding */
-    @apply bg-card text-card-foreground rounded-[--radius] p-4;
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border-radius: var(--radius);
+    padding: 1rem;
   }
+
   .card-light {
-    /* CORREÇÃO APLICADA: text-card-light-foreground garante texto escuro */
-    @apply bg-card-light text-card-light-foreground rounded-[--radius] p-4;
+    background-color: hsl(var(--card-light));
+    color: hsl(var(--card-light-foreground));
+    border-radius: var(--radius);
+    padding: 1rem;
   }
 
-  /* Botões Base */
-  .btn {
-    @apply rounded-[--radius] px-4 py-2 border-none cursor-pointer transition-colors duration-200;
-  }
-
-  /* 🟦 Botões */
   .btn-primary {
-    @apply btn bg-primary text-primary-foreground;
-  }
-  .btn-primary:hover {
-    background-color: hsl(var(--primary) / 0.9);
-  }
-
-  .btn-secondary {
-    @apply btn bg-card text-card-foreground;
-  }
-  .btn-secondary:hover {
-    background-color: hsl(var(--card) / 0.9);
-  }
-
-  /* 🧭 Barra de navegação */
-  .navbar {
-    @apply bg-card text-card-foreground border-b border-border shadow-lg flex justify-start px-4 py-2;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  .navbar-item {
-    @apply relative py-3 px-4 cursor-pointer transition-colors duration-200;
-  }
-
-  .navbar-item:hover {
-    background-color: hsl(var(--primary) / 0.1);
-  }
-
-  .dropdown {
-    @apply hidden absolute top-full left-0 bg-card border border-border rounded-[--radius] min-w-[200px] z-50;
-  }
-
-  .navbar-item:hover .dropdown,
-  .dropdown.active {
-    @apply block;
-  }
-
-  .dropdown-item {
-    @apply block text-card-foreground no-underline py-3 px-4 transition-colors duration-200;
-  }
-
-  .dropdown-item:hover {
-    background-color: hsl(var(--primary) / 0.1);
-  }
-  
-  /* 🪑 Cartões de mesa */
-  .table-card {
-    @apply bg-card text-card-foreground border-2 border-[hsl(var(--primary)/0.3)] rounded-[--radius] p-4 cursor-pointer transition-all duration-300 ease-in-out;
-  }
-  .table-card:hover {
-    border-color: hsl(var(--primary));
-    box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
-    transform: scale(1.05);
-  }
-  .table-card.occupied {
-    border-color: hsl(var(--primary));
-    background-color: hsl(var(--primary) / 0.1);
-  }
-  .table-card.occupied:hover {
-    box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
-  }
-
-  /* 🪟 Modal */
-  .modal-overlay {
-    @apply fixed inset-0 z-50 flex items-center justify-center;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-  }
-  .modal-content {
-    @apply bg-card text-card-foreground border border-border rounded-[--radius] max-w-4xl w-full max-h-[90vh] overflow-auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-
-  /* 🛍️ Cartões de produto */
-  .product-card {
-    @apply bg-card text-card-foreground border border-border rounded-[--radius] p-3 cursor-pointer transition-all duration-200;
-  }
-  .product-card:hover {
-    border-color: hsl(var(--primary));
-    box-shadow: 0 4px 8px hsl(var(--primary) / 0.2);
-  }
-  .product-card img {
-    @apply w-full h-32 object-cover rounded-sm mb-2;
-  }
-
-  /* 🏷️ Badge de categoria */
-  .category-badge {
-    @apply inline-block px-3 py-1 rounded-full text-xs font-semibold;
-    background-color: hsl(var(--primary) / 0.2);
-    color: hsl(var(--primary));
-    border: 1px solid hsl(var(--primary) / 0.3);
-  }
-
-  /* 📊 Cartão de estatísticas */
-  .stat-card {
-    @apply text-card-foreground border border-border rounded-[--radius] p-6;
-    background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--card) / 0.5));
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  /* 🖱️ Hover em linhas de tabela */
-  .table-row-hover:hover {
-    background-color: hsl(var(--card) / 0.5);
-    transition: background-color 0.2s ease;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    border: none;
     cursor: pointer;
   }
+}
+
+/* 🧭 Barra de navegação */
+.navbar {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-item {
+  position: relative;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.navbar-item:hover {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.navbar-item:hover .dropdown,
+.dropdown.active {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  color: hsl(var(--card-foreground));
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+/* 🟦 Botões */
+.btn-primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  transition: background-color 0.2s ease;
+}
+.btn-primary:hover {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
+.btn-secondary {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  transition: background-color 0.2s ease;
+}
+.btn-secondary:hover {
+  background-color: hsl(var(--card) / 0.9);
+}
+
+/* 🪑 Cartões de mesa */
+.table-card {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 2px solid hsl(var(--primary) / 0.3);
+  border-radius: var(--radius);
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.table-card:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
+  transform: scale(1.05);
+}
+.table-card.occupied {
+  border-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.1);
+}
+.table-card.occupied:hover {
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.2);
+}
+
+/* 🪟 Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 64rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+/* 🛍️ Cartões de produto */
+.product-card {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.product-card:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 4px 8px hsl(var(--primary) / 0.2);
+}
+.product-card img {
+  width: 100%;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 🏷️ Badge de categoria */
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.3);
+}
+
+/* 📊 Cartão de estatísticas */
+.stat-card {
+  background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--card) / 0.5));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 🖱️ Hover em linhas de tabela */
+.table-row-hover:hover {
+  background-color: hsl(var(--card) / 0.5);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
 /* ✨ Animação de brilho pulsante */
