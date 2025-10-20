@@ -13,14 +13,16 @@ export default function ProductsView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null); // Novo estado para a categoria selecionada
 
-  const [formData, setFormData({
-    name: '',
-    category: '',
-    price: '',
-    description: '',
-    image: '',
-    stock: ''
-  });
+  // CÓDIGO CORRIGIDO
+const [formData, setFormData] = useState({
+  name: '',
+  category: '',
+  price: '',
+  description: '',
+  image: '',
+  stock: ''
+});
+
 
   const categories = useMemo(() => {
     const uniqueCategories = [...new Set(products.map(p => p.category))];
