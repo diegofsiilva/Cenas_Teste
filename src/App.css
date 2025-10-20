@@ -13,16 +13,18 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Variáveis de tema base */
+/* Variáveis de tema base alteração daqui para baixo*/
 @layer base {
   :root {
     --radius: 0.5rem;
 
     /* 🎨 Paleta escura inspirada no Copilot */
-  --background: 220 30% 10%;              /* fundo geral */
-    --foreground: 0 0% 10%;                /* texto branco */
-    --card: 220 25% 15%;                    /* caixas */
-    --card-foreground: 0 0% 100%;           /* texto nas caixas */
+    --background: 220 30% 10%;              /* fundo geral */
+    --foreground: 0 0% 90%;                 /* texto branco */
+    --card: 220 25% 15%;                    /* caixas escuras */
+    --card-foreground: 0 0% 100%;           /* texto nas caixas escuras */
+    --card-light: 0 0% 95%;                 /* caixas claras */
+    --card-light-foreground: 0 0% 10%;      /* texto nas caixas claras */
     --popover: 220 25% 12%;                 /* fundo de popover */
     --popover-foreground: 0 0% 100%;        /* texto no popover */
     --primary: 220 90% 56%;                 /* azul vibrante */
@@ -54,9 +56,26 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
+
+  /* Estilo para caixas padrão (escuras) */
+  .card {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+
+  /* Estilo para caixas claras com texto escuro */
+  .card-light {
+    background-color: hsl(var(--card-light));
+    color: hsl(var(--card-light-foreground));
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
 }
 
-/* 🧭 Barra de navegação */
+
+/* 🧭 Barra de navegação (Aqui para cima )*/
 .navbar {
   background-color: hsl(var(--card));
   color: hsl(var(--card-foreground));
