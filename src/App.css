@@ -19,8 +19,8 @@
     --radius: 0.5rem;
 
     /* 🎨 Paleta escura inspirada no Copilot */
-    --background: 220 30% 10%;              /* fundo geral */
-    --foreground: 0 0% 90%;                 /* texto branco */
+ --background: 220 30% 10%;              /* fundo geral */
+    --foreground: 0 0% 90%;                 /* texto padrão (quase branco) */
     --card: 220 25% 15%;                    /* caixas escuras */
     --card-foreground: 0 0% 100%;           /* texto nas caixas escuras */
     --card-light: 0 0% 95%;                 /* caixas claras */
