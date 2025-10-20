@@ -23,9 +23,9 @@
     --foreground: 0 0% 100%;
     --text: 0 0% 95%;
     --card: 220 25% 15%;
-    --card-foreground: 0 0% 50%;
-    --card-light: 0 0% 8%;
-    --card-light-foreground: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+    --card-light: 0 0% 98%;                 /* fundo branco suave */
+    --card-light-foreground: 0 0% 10%;      /* texto preto visível */
     --primary: 220 90% 56%;
     --primary-foreground: 0 0% 100%;
     --border: 220 20% 25%;
@@ -50,10 +50,14 @@
   }
 
   .card-light {
-    background-color: hsl(var(--card-light));
-    color: hsl(var(--card-light-foreground));
+    background-color: hsl(var(--card-light)) !important;
+    color: hsl(var(--card-light-foreground)) !important;
     border-radius: var(--radius);
     padding: 1rem;
+  }
+
+  .card-light * {
+    color: hsl(var(--card-light-foreground)) !important;
   }
 
   .btn-primary {
@@ -253,12 +257,4 @@
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(var(--card));
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.3);
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
-}
+  background: h
