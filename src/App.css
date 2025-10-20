@@ -5,8 +5,6 @@
 /* Variantes personalizadas para modo escuro */
 @custom-variant dark (&:is(.dark *));
 
-/* Tamanhos de borda arredondada - Removido o bloco @theme, deve ser configurado no tailwind.config.js */
-
 /* Variáveis de tema base */
 @layer base {
   :root {
@@ -19,7 +17,7 @@
     --card: 220 25% 15%; /* Fundo do Card (Escuro) */
     --card-foreground: 0 0% 100%; /* Texto do Card (Branco) */
     
-    /* 🌟 CORREÇÃO DE PROBLEMA: Garantindo texto escuro em fundo claro */
+    /* 🌟 CORREÇÃO APLICADA: Garantindo texto escuro em fundo claro */
     --card-light: 0 0% 98%; /* Fundo do Card Claro (Quase Branco) */
     --card-light-foreground: 0 0% 10%; /* Texto do Card Claro (Quase Preto) */
     
@@ -32,11 +30,10 @@
   /* Aplica o estilo de borda e anel de foco em todos os elementos */
   * {
     border-color: hsl(var(--border));
-    /* Mantido apenas para fallback, a acessibilidade será tratada no :focus-visible */
     outline-color: hsl(var(--ring) / 0.5);
   }
 
-  /* Garante um foco visível para acessibilidade (Substituindo o comportamento padrão do outline) */
+  /* Garante um foco visível para acessibilidade */
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
@@ -56,7 +53,7 @@
     @apply bg-card text-card-foreground rounded-[--radius] p-4;
   }
   .card-light {
-    /* APLICAÇÃO DE COR CORRIGIDA: Garante que a cor do texto seja escura */
+    /* CORREÇÃO APLICADA: text-card-light-foreground garante texto escuro */
     @apply bg-card-light text-card-light-foreground rounded-[--radius] p-4;
   }
 
@@ -70,7 +67,6 @@
     @apply btn bg-primary text-primary-foreground;
   }
   .btn-primary:hover {
-    /* Uso de HSL para hover */
     background-color: hsl(var(--primary) / 0.9);
   }
 
@@ -80,8 +76,6 @@
   .btn-secondary:hover {
     background-color: hsl(var(--card) / 0.9);
   }
-  /* O CSS dos botões base que estava no @layer base foi removido e integrado aqui no @apply */
-
 
   /* 🧭 Barra de navegação */
   .navbar {
@@ -90,7 +84,7 @@
   }
 
   .navbar-item {
-    @apply relative py-3 px-4 cursor-pointer transition-colors duration-200; /* Adicionado transição */
+    @apply relative py-3 px-4 cursor-pointer transition-colors duration-200;
   }
 
   .navbar-item:hover {
@@ -98,7 +92,7 @@
   }
 
   .dropdown {
-    @apply hidden absolute top-full left-0 bg-card border border-border rounded-[--radius] min-w-[200px] z-50; /* Z-index otimizado */
+    @apply hidden absolute top-full left-0 bg-card border border-border rounded-[--radius] min-w-[200px] z-50;
   }
 
   .navbar-item:hover .dropdown,
@@ -116,7 +110,6 @@
   
   /* 🪑 Cartões de mesa */
   .table-card {
-    /* Reorganizado para usar border-2 (do tailwind) e variáveis */
     @apply bg-card text-card-foreground border-2 border-[hsl(var(--primary)/0.3)] rounded-[--radius] p-4 cursor-pointer transition-all duration-300 ease-in-out;
   }
   .table-card:hover {
@@ -134,13 +127,11 @@
 
   /* 🪟 Modal */
   .modal-overlay {
-    /* Classes Tailwind: fixed, inset-0, z-50, flex, items-center, justify-center */
     @apply fixed inset-0 z-50 flex items-center justify-center;
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
   }
   .modal-content {
-    /* bg-card, text-card-foreground, border, rounded, max-w, w-full, max-h, overflow-auto */
     @apply bg-card text-card-foreground border border-border rounded-[--radius] max-w-4xl w-full max-h-[90vh] overflow-auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   }
