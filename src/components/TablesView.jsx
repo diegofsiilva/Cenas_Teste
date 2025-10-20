@@ -95,7 +95,7 @@ export default function TablesView() {
   const TableCard = ({ table }) => {
     const isOccupied = table.status === 'occupied';
     // Ajuste de cores para tema escuro e melhor visibilidade
-    const statusColor = isOccupied ? 'border-red-400 bg-red-900 text-red-200' : 'border-green-400 bg-green-900 text-green-200';
+    const statusColor = isOccupied ? 'border-red-250 bg-red-800 text-red-200' : 'border-green-300 bg-green-900 text-green-200';
     const statusText = isOccupied ? 'Ocupada' : 'Disponível';
     const totalOrder = table.order.reduce((sum, item) => sum + (item.price * item.qty), 0);
     
