@@ -22,7 +22,7 @@
     --background: 220 30% 10%;              /* fundo geral */
     --foreground: 0 0% 100%;                /* texto branco */
     --card: 220 25% 15%;                    /* caixas */
-    --card-foreground: 0 0% 100%;           /* texto nas caixas */
+    --card-foreground: 0 100% 100%;           /* texto nas caixas */
     --popover: 220 25% 12%;                 /* fundo de popover */
     --popover-foreground: 0 0% 100%;        /* texto no popover */
     --primary: 220 90% 56%;                 /* azul vibrante */
