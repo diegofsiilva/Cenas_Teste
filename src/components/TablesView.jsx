@@ -4,16 +4,21 @@ import { Plus, X, Utensils, CheckCircle, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 
-// Importar o novo componente que será criado na próxima fase
+// Importar o novo componente de seleção de produtos
 import ProductsSelectionView from './ProductsSelectionView';
 
-// Dados de exemplo para simular mesas, já que não temos o AppContext
+// Dados de exemplo atualizados para incluir todas as mesas do layout do usuário
 const dummyTables = [
   { id: 1, name: 'Mesa 1', status: 'available', order: [] },
   { id: 2, name: 'Mesa 2', status: 'occupied', order: [{ id: 'prod-1', name: 'Cerveja', price: 10.00, qty: 2 }] },
   { id: 3, name: 'Mesa 3', status: 'available', order: [] },
   { id: 4, name: 'Mesa 4', status: 'occupied', order: [{ id: 'prod-2', name: 'Porção Fritas', price: 25.00, qty: 1 }] },
   { id: 5, name: 'Mesa 5', status: 'available', order: [] },
+  { id: 6, name: 'Mesa 6', status: 'occupied', order: [{ id: 'prod-3', name: 'Água', price: 5.00, qty: 3 }] },
+  { id: 7, name: 'Mesa 7', status: 'available', order: [] },
+  { id: 8, name: 'Sinuca', status: 'occupied', order: [{ id: 'prod-4', name: 'Rodada', price: 15.00, qty: 1 }] },
+  { id: 9, name: 'Bistro 1', status: 'available', order: [] },
+  { id: 10, name: 'Bistro 2', status: 'occupied', order: [{ id: 'prod-5', name: 'Café', price: 8.00, qty: 1 }] },
 ];
 
 export default function TablesView() {
@@ -66,7 +71,21 @@ export default function TablesView() {
     // Atualiza o estado da mesa selecionada para refletir a mudança imediatamente
     setSelectedTable(prevTable => {
         const updatedTable = tables.find(t => t.id === prevTable.id);
-        return updatedTable;
+        if (updatedTable) {
+            // Recalcula o estado da mesa selecionada com os dados atualizados
+            const existingItem = updatedTable.order.find(item => item.id === productData.id);
+            let newOrder;
+            if (existingItem) {
+                newOrder = updatedTable.order.map(item =>
+                    item.id === productData.id ? { ...item, qty: item.qty + 1 } : item
+                );
+            } else {
+                newOrder = [...updatedTable.order, { ...productData, qty: 1 }];
+            }
+            const newStatus = updatedTable.status === 'available' ? 'occupied' : updatedTable.status;
+            return { ...updatedTable, status: newStatus, order: newOrder };
+        }
+        return prevTable;
     });
     
     // Após adicionar o produto, volta para a visualização da comanda
@@ -78,10 +97,16 @@ export default function TablesView() {
     const statusColor = isOccupied ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50';
     const statusText = isOccupied ? 'Ocupada' : 'Disponível';
     const totalOrder = table.order.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    
+    // Adiciona classes específicas para mesas redondas (Bistrôs)
+    const shapeClass = table.name.includes('Bistro') ? 'rounded-full h-32 w-32 flex flex-col items-center justify-center text-center' : 'rounded-lg';
+    
+    // Adiciona o grid-area para posicionamento
+    const gridAreaClass = `area-${table.name.toLowerCase().replace(/ /g, '-').replace('á', 'a')}`;
 
     return (
       <Card 
-        className={`cursor-pointer transition-all hover:shadow-lg ${statusColor}`}
+        className={`cursor-pointer transition-all hover:shadow-lg ${statusColor} ${shapeClass} ${gridAreaClass}`}
         onClick={() => handleSelectTable(table)}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -168,20 +193,20 @@ export default function TablesView() {
         </div>
 
         {isAddingProducts ? (
-            // 3. Exibir o componente de seleção de produtos
+            // Exibir o componente de seleção de produtos
             <ProductsSelectionView 
                 onProductSelect={handleAddProductToOrder}
-                onCancel={handleBackToTables} // Pode ser alterado para voltar para OrderView
+                onCancel={() => setIsAddingProducts(false)} // Volta para a OrderView
             />
         ) : (
-            // 2. Exibir a comanda da mesa selecionada
+            // Exibir a comanda da mesa selecionada
             <OrderView table={selectedTable} />
         )}
       </div>
     );
   }
 
-  // 1. Visualização de Mesas
+  // Visualização de Mesas com Layout Personalizado
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
@@ -192,7 +217,39 @@ export default function TablesView() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {/* 
+        Ajuste do Layout com CSS Grid e grid-template-areas para replicar o desenho.
+        As classes de grid-area (ex: area-mesa-1) são adicionadas no componente TableCard.
+        
+        Você precisará garantir que essas classes CSS personalizadas sejam carregadas 
+        no seu projeto (ex: no seu arquivo global de estilos ou via um plugin do Tailwind).
+      */}
+      <style jsx>{`
+        .tables-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr) 100px; /* 6 colunas para mesas + 1 para bistrôs */
+          grid-template-rows: repeat(3, 100px) 100px; /* 3 linhas para mesas + 1 para espaçamento */
+          gap: 20px;
+          grid-template-areas:
+            "mesa-1 mesa-2 mesa-3 mesa-4 mesa-5 sinuca bistro-1"
+            ". . . . . sinuca ."
+            ". . . mesa-6 mesa-7 . bistro-2"
+            ". . . . . . ."; /* Linha extra para espaçamento inferior */
+        }
+
+        .area-mesa-1 { grid-area: mesa-1; }
+        .area-mesa-2 { grid-area: mesa-2; }
+        .area-mesa-3 { grid-area: mesa-3; }
+        .area-mesa-4 { grid-area: mesa-4; }
+        .area-mesa-5 { grid-area: mesa-5; }
+        .area-mesa-6 { grid-area: mesa-6; }
+        .area-mesa-7 { grid-area: mesa-7; }
+        .area-sinuca { grid-area: sinuca; }
+        .area-bistro-1 { grid-area: bistro-1; }
+        .area-bistro-2 { grid-area: bistro-2; }
+      `}</style>
+
+      <div className="tables-grid">
         {tables.map(table => (
           <TableCard key={table.id} table={table} />
         ))}
